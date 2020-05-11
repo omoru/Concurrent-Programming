@@ -62,9 +62,7 @@ public class Server {
 	
 	
 	public static void añadirFlujosUsuario(FlujosUsuario fu) {
-
 		tabla_flujos_usuarios.add(fu);
-		
 	}
 	
 	

@@ -17,12 +17,13 @@ public class OyenteServer extends Thread{
 	
 	private Socket socket;
 	private ObjectInputStream f_in; // flujo entrada a cliente
-	private ObjectOutputStream f_out; // flujo entrada a cliente
-	
-	public OyenteServer(Socket s) {
+	private Client client;
+	public OyenteServer(Socket s,Client client) {
 		try {
+			this.client=client;
+			
 			this.socket = s;
-			this.f_in = new  ObjectInputStream(socket.getInputStream());
+			this.f_in = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			System.out.println("PROBLEMA EN LA CREACION DE OYENTESERVER");
 			e.printStackTrace();
@@ -36,11 +37,10 @@ public class OyenteServer extends Thread{
 			Mensaje m;		
 				try {
 					 m = (Mensaje)f_in.readObject();
-					 
 					switch(m.getMensaje()) {
 						case "MENSAJE_CONFIRMACION_CONEXION":{
 							System.out.println("Conexion realizada con server");
-							System.out.println("info: ip origen :" + m.getIPOrigen() +" ip_dest: "+ m.getIPDestino());
+							System.out.println("Info: ip origen :" + m.getIPOrigen() +",  ip_dest: "+ m.getIPDestino());
 							break;
 						}
 						case "MENSAJE_CONFIRMACION_LISTA_USARIOS":{
@@ -49,9 +49,9 @@ public class OyenteServer extends Thread{
 							break;
 						}
 						case "MENSAJE_EMITIR_FICHERO":{
-							Mensaje mm = new MsgPreparadoCS(m.getIdUsuario(),Client.getIP(),Client.getPuertoPropio());
-							Client.sendMensaje(mm);
-							ServerSocket s= new ServerSocket(Client.getPuertoPropio());
+							Mensaje mm = new MsgPreparadoCS(m.getIdUsuario(),client.getIP(),client.getPuertoPropio());
+							client.sendMensaje(mm);
+							ServerSocket s= new ServerSocket(client.getPuertoPropio());
 							new Emisor(s.accept(),m.getFilename()).start();
 							break;
 						}
@@ -70,13 +70,12 @@ public class OyenteServer extends Thread{
 						}
 						default:
 	                        System.out.println("Mensaje no identificado");break;
+					}
 				}
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
+				catch (Exception e) {
+					System.out.println("Se ha cortado la conexion del server");
 					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					return;
 				}
 				
 		
