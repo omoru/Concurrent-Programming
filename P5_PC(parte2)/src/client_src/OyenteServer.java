@@ -9,7 +9,11 @@ import java.util.ArrayList;
 
 import client_src.Client;
 import msg_src.Mensaje;
+import msg_src.MsgConfirmListaUsuarios;
+import msg_src.MsgConfirmacionCerrarConexion;
+import msg_src.MsgEmitirFichero;
 import msg_src.MsgPreparadoCS;
+import msg_src.MsgPreparadoSC;
 import users_src.FlujosUsuario;
 import users_src.Usuario;
 
@@ -21,7 +25,6 @@ public class OyenteServer extends Thread{
 	public OyenteServer(Socket s,Client client) {
 		try {
 			this.client=client;
-			
 			this.socket = s;
 			this.f_in = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
@@ -40,29 +43,28 @@ public class OyenteServer extends Thread{
 					switch(m.getMensaje()) {
 						case "MENSAJE_CONFIRMACION_CONEXION":{
 							System.out.println("Conexion realizada con server");
-							System.out.println("Info: ip origen :" + m.getIPOrigen() +",  ip_dest: "+ m.getIPDestino());
 							break;
 						}
 						case "MENSAJE_CONFIRMACION_LISTA_USARIOS":{
 							System.out.println("Se ha recibido la información de los usuarios");
-							printInfoUsuarios(m.getInfo_usuarios());
+							printInfoUsuarios(((MsgConfirmListaUsuarios) m).getInfo_usuarios());
 							break;
 						}
 						case "MENSAJE_EMITIR_FICHERO":{
-							Mensaje mm = new MsgPreparadoCS(m.getIdUsuario(),client.getIP(),client.getPuertoPropio());
+							Mensaje mm = new MsgPreparadoCS(((MsgEmitirFichero) m).getIdUsuario(),client.getIP(),client.getPuertoPropio());
 							client.sendMensaje(mm);
 							ServerSocket s= new ServerSocket(client.getPuertoPropio());
-							new Emisor(s.accept(),m.getFilename()).start();
+							new Emisor(s.accept(),((MsgEmitirFichero) m).getFilename()).start();
 							break;
 						}
 						case "MENSAJE_PREPARADO_SERVIDORCLIENTE":{
-							String ip_dest= m.getMyIP();
-							int  puerto_dest=m.getPuertoPropio();
+							String ip_dest= ((MsgPreparadoSC) m).getMyIP();
+							int  puerto_dest=((MsgPreparadoSC) m).getPuertoPropio();
 							new Receptor(ip_dest,puerto_dest).start();
 							break;
 						}
 						case "MENSAJE_CONFIRMACION_CERRAR_CONEXION":{
-							System.out.println("Adios "+ m.getIdUsuario());
+							System.out.println("Adios "+ ((MsgConfirmacionCerrarConexion) m).getIdUsuario());
 							socket.close();
 							f_in.close();
 							return;

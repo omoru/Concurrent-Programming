@@ -1,5 +1,5 @@
 package client_src;
-import java.net.Socket;
+
 import java.util.Scanner;
 
 
@@ -10,7 +10,7 @@ public class MainClient {
 		
 		if(args.length!=4) {
 			System.out.println("Usage: args[0]->ip server, args[1]->puerto server, args[2]-> ip cliente, args[3]-> puerto cliente");
-			System.out.println("Es necesaria la IP del host y puerto");
+			System.out.println("Ejemplo: 192.168.0.21 555 192.168.0.21 588");
 			return;
 		}
 		
@@ -26,8 +26,6 @@ public class MainClient {
 			nombre = sc.nextLine();
 					
 			//Creamos el canal de comunicación con ip_host por el puerto correspondiente
-			
-				
 			Client client = new Client(PUERTO,ip_client,puerto_propio,ip_host,nombre);
 			client.start();		
 			

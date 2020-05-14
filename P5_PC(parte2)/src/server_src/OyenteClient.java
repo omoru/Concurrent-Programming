@@ -7,10 +7,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import msg_src.Mensaje;
+import msg_src.MsgCerrarConexion;
+import msg_src.MsgConexion;
 import msg_src.MsgConfirmListaUsuarios;
 import msg_src.MsgConfirmacionCerrarConexion;
 import msg_src.MsgConfirmacionConexion;
 import msg_src.MsgEmitirFichero;
+import msg_src.MsgListaUsuarios;import msg_src.MsgPedirFichero;
+import msg_src.MsgPreparadoCS;
 import msg_src.MsgPreparadoSC;
 import users_src.FlujosUsuario;
 import users_src.Usuario;
@@ -46,37 +50,39 @@ public class OyenteClient extends Thread {
 				switch(m.getMensaje()) {
 					case "MENSAJE_CONEXION":{
 						//info usuario
-						Usuario u = new Usuario(m.getIdUsuario(),m.getIPOrigen(),m.getFicheros());
+						
+						Usuario u = new Usuario(((MsgConexion) m).getIdUsuario(),m.getIPOrigen(),((MsgConexion) m).getFicheros());
 						//id y canales usuario
-						FlujosUsuario fu= new FlujosUsuario(m.getIdUsuario(),f_out,f_in);
+						FlujosUsuario fu= new FlujosUsuario(((MsgConexion) m).getIdUsuario(),f_out,f_in);
 						Server.añadirUsuario(u);
 						Server.añadirFlujosUsuario(fu);
 						//enviamos mensaje confirmacion
-						f_out.writeObject(new MsgConfirmacionConexion(m.getIPDestino(),m.getIPOrigen()));
+						f_out.writeObject(new MsgConfirmacionConexion(m.getIPDestino(),m.getIPOrigen()));//del server al cliente
 						break;
 					}
 					case "MENSAJE_LISTA_USARIOS":{
-						System.out.println("Cliente "+ m.getIdUsuario()+" ha solicitado info usuarios");
+						System.out.println("Cliente "+ ((MsgListaUsuarios) m).getIdUsuario()+" ha solicitado info usuarios");
 						f_out.writeObject(new MsgConfirmListaUsuarios(m.getIPDestino(), m.getIPOrigen(),Server.getUsersInfo()));
 						break;
 					}
 					case "MENSAJE_CERRAR_CONEXION":{
-						System.out.println("Servidor cerrando conexion con " + m.getIdUsuario());
-						f_out.writeObject(new MsgConfirmacionCerrarConexion(m.getIPDestino(),m.getIPOrigen(),m.getIdUsuario()));
-						Server.deleteInfoUsuario(m.getIdUsuario());
-						Server.deleteFlujosUsuario(m.getIdUsuario());
+						System.out.println("Servidor cerrando conexion con " + ((MsgCerrarConexion) m).getIdUsuario());
+						f_out.writeObject(new MsgConfirmacionCerrarConexion(m.getIPDestino(),m.getIPOrigen(),((MsgCerrarConexion) m).getIdUsuario()));
+						Server.deleteInfoUsuario(((MsgCerrarConexion) m).getIdUsuario());
+						Server.deleteFlujosUsuario(((MsgCerrarConexion) m).getIdUsuario());
 						f_out.close();
 						return;
 					}
 					case "MENSAJE_PEDIR_FICHERO":{
-						String id_user = Server.getOwnerFile(m.getFilename());
+						String id_user = Server.getOwnerFile(((MsgPedirFichero) m).getFilename());
 						ObjectOutputStream f_out2 = Server.getOutputStreamOC(id_user);
-						f_out2.writeObject(new MsgEmitirFichero(m.getFilename(),m.getIdUsuario()));
+						f_out2.writeObject(new MsgEmitirFichero(((MsgPedirFichero) m).getFilename()
+								,((MsgPedirFichero) m).getIdUsuario()));
 						break;
 					}
 					case "MENSAJE_PREPARADO_CLIENTESERVIDOR":{
-						ObjectOutputStream f_out1 = Server.getOutputStreamOC(m.getIdUsuario());
-						f_out1.writeObject(new MsgPreparadoSC(m.getMyIP(),m.getPuertoPropio()));
+						ObjectOutputStream f_out1 = Server.getOutputStreamOC(((MsgPreparadoCS) m).getIdUsuario());
+						f_out1.writeObject(new MsgPreparadoSC(((MsgPreparadoCS) m).getMyIP(),((MsgPreparadoCS) m).getPuertoPropio()));
 						break;
 					}
 				}

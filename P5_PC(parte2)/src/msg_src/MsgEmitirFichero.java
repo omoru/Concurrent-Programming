@@ -4,6 +4,7 @@ public class MsgEmitirFichero extends Mensaje {
 	
 	private String filename;
 	private String id_user;
+	
 	public MsgEmitirFichero(String filename, String id_user) {
 		super(null, null, "MENSAJE_EMITIR_FICHERO");
 		this.filename=filename;

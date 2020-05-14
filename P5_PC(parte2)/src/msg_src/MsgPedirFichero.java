@@ -4,6 +4,7 @@ public class MsgPedirFichero extends Mensaje {
 	
 	private String filename;
 	private String id_usuario;
+	
 	public MsgPedirFichero(String id_usuario,String origen, String dest, String filename) {
 		super(origen, dest, "MENSAJE_PEDIR_FICHERO");
 		this.filename=filename;
