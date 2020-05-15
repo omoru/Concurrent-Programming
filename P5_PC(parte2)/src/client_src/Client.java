@@ -17,12 +17,12 @@ import msg_src.MsgPedirFichero;
 public class Client extends Thread{
 		
 	private int puerto;//puerto de conexion al server
-	private String ip_client;//puerto conexiones entrantes
+	private String ip_client;//ip del cliente
 	private int puerto_propio;// puerto del cliente que se usa cuando va a actuar como server y transmitir datos a otro cliente
 	private ObjectOutputStream f_out;
-	private String ip_host;
+	private String ip_host;//ip server
 	private String id_usuario;
-	private ArrayList<String> ficheros;
+	private ArrayList<String> ficheros;//ficheros que tiene el usuario
 	
 	public Client(int puerto, String ip_client, int puerto_propio, String ip_host,String id_usuario) {
 		this.puerto = puerto;

@@ -24,13 +24,15 @@ public class OyenteClient extends Thread {
 	private Socket socket;
 	private ObjectOutputStream f_out;//flujo salida hacia cliente
 	private ObjectInputStream f_in; // flujo entrada a servidor
+	private Server server;
 	
-	public OyenteClient(Socket s) {
+	public OyenteClient(Socket s,Server server) {
 		
 		try {
 			this.socket = s;
 			this.f_out= new ObjectOutputStream(socket.getOutputStream());
 			this.f_in = new  ObjectInputStream(socket.getInputStream());
+			this.server= server;
 		} catch (IOException e) {
 			System.out.println("PROBLEMA EN LA CREACION DE OYENTE CLIENTE");
 			e.printStackTrace();
@@ -54,34 +56,34 @@ public class OyenteClient extends Thread {
 						Usuario u = new Usuario(((MsgConexion) m).getIdUsuario(),m.getIPOrigen(),((MsgConexion) m).getFicheros());
 						//id y canales usuario
 						FlujosUsuario fu= new FlujosUsuario(((MsgConexion) m).getIdUsuario(),f_out,f_in);
-						Server.añadirUsuario(u);
-						Server.añadirFlujosUsuario(fu);
+						server.añadirUsuario(u);
+						server.añadirFlujosUsuario(fu);
 						//enviamos mensaje confirmacion
 						f_out.writeObject(new MsgConfirmacionConexion(m.getIPDestino(),m.getIPOrigen()));//del server al cliente
 						break;
 					}
 					case "MENSAJE_LISTA_USARIOS":{
 						System.out.println("Cliente "+ ((MsgListaUsuarios) m).getIdUsuario()+" ha solicitado info usuarios");
-						f_out.writeObject(new MsgConfirmListaUsuarios(m.getIPDestino(), m.getIPOrigen(),Server.getUsersInfo()));
+						f_out.writeObject(new MsgConfirmListaUsuarios(m.getIPDestino(), m.getIPOrigen(),server.getUsersInfo()));
 						break;
 					}
 					case "MENSAJE_CERRAR_CONEXION":{
 						System.out.println("Servidor cerrando conexion con " + ((MsgCerrarConexion) m).getIdUsuario());
 						f_out.writeObject(new MsgConfirmacionCerrarConexion(m.getIPDestino(),m.getIPOrigen(),((MsgCerrarConexion) m).getIdUsuario()));
-						Server.deleteInfoUsuario(((MsgCerrarConexion) m).getIdUsuario());
-						Server.deleteFlujosUsuario(((MsgCerrarConexion) m).getIdUsuario());
+						server.deleteInfoUsuario(((MsgCerrarConexion) m).getIdUsuario());
+						server.deleteFlujosUsuario(((MsgCerrarConexion) m).getIdUsuario());
 						f_out.close();
 						return;
 					}
 					case "MENSAJE_PEDIR_FICHERO":{
-						String id_user = Server.getOwnerFile(((MsgPedirFichero) m).getFilename());
-						ObjectOutputStream f_out2 = Server.getOutputStreamOC(id_user);
+						String id_user = server.getOwnerFile(((MsgPedirFichero) m).getFilename());
+						ObjectOutputStream f_out2 = server.getOutputStreamOC(id_user);
 						f_out2.writeObject(new MsgEmitirFichero(((MsgPedirFichero) m).getFilename()
 								,((MsgPedirFichero) m).getIdUsuario()));
 						break;
 					}
 					case "MENSAJE_PREPARADO_CLIENTESERVIDOR":{
-						ObjectOutputStream f_out1 = Server.getOutputStreamOC(((MsgPreparadoCS) m).getIdUsuario());
+						ObjectOutputStream f_out1 = server.getOutputStreamOC(((MsgPreparadoCS) m).getIdUsuario());
 						f_out1.writeObject(new MsgPreparadoSC(((MsgPreparadoCS) m).getMyIP(),((MsgPreparadoCS) m).getPuertoPropio()));
 						break;
 					}
@@ -89,8 +91,8 @@ public class OyenteClient extends Thread {
 								
 			} catch (Exception e) {
 				System.out.println("Algo falla en un OyenteClient,cerrando su conexion");
-				Server.deleteInfoUsuario(m.getIdUsuario());
-				Server.deleteFlujosUsuario(m.getIdUsuario());
+				server.deleteInfoUsuario(m.getIdUsuario());
+				server.deleteFlujosUsuario(m.getIdUsuario());
 				try {
 					
 					f_out.close();
