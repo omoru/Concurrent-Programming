@@ -84,7 +84,8 @@ public class OyenteClient extends Thread {
 					}
 					case "MENSAJE_PREPARADO_CLIENTESERVIDOR":{
 						ObjectOutputStream f_out1 = server.getOutputStreamOC(((MsgPreparadoCS) m).getIdUsuario());
-						f_out1.writeObject(new MsgPreparadoSC(((MsgPreparadoCS) m).getMyIP(),((MsgPreparadoCS) m).getPuertoPropio()));
+						f_out1.writeObject(new MsgPreparadoSC(((MsgPreparadoCS) m).getMyIP(),((MsgPreparadoCS) m).getPuertoPropio(),
+								((MsgPreparadoCS) m).getFilename()));
 						break;
 					}
 				}

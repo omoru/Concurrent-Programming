@@ -29,6 +29,7 @@ public class Server extends Thread {
 		ServerSocket s;
 		try {
 			s = new ServerSocket(PUERTO);
+			System.out.println("IPPPP:");
 			while(true) {
 				System.out.println("Esperando nuevas conexiones...");
 				new OyenteClient(s.accept(),this).start(); // detenemos al servidor hasta que llega un cliente

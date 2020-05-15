@@ -51,16 +51,17 @@ public class OyenteServer extends Thread{
 							break;
 						}
 						case "MENSAJE_EMITIR_FICHERO":{
-							Mensaje mm = new MsgPreparadoCS(((MsgEmitirFichero) m).getIdUsuario(),client.getIP(),client.getPuertoPropio());
+							Mensaje mm = new MsgPreparadoCS(((MsgEmitirFichero) m).getIdUsuario(),client.getIP(),client.getPuertoPropio(),
+									((MsgEmitirFichero) m).getFilename());
 							client.sendMensaje(mm);
 							ServerSocket s= new ServerSocket(client.getPuertoPropio());
-							new Emisor(s.accept(),((MsgEmitirFichero) m).getFilename()).start();
+							new Emisor(s.accept(),((MsgEmitirFichero) m).getFilename(),m.getIdUsuario()).start();
 							break;
 						}
 						case "MENSAJE_PREPARADO_SERVIDORCLIENTE":{
 							String ip_dest= ((MsgPreparadoSC) m).getMyIP();
 							int  puerto_dest=((MsgPreparadoSC) m).getPuertoPropio();
-							new Receptor(ip_dest,puerto_dest).start();
+							new Receptor(ip_dest,puerto_dest,client.get_idUsuario(),((MsgPreparadoSC) m).getFilename()).start();
 							break;
 						}
 						case "MENSAJE_CONFIRMACION_CERRAR_CONEXION":{

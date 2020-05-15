@@ -35,7 +35,6 @@ public class Client extends Thread{
 	
 	public void run() {
 		try {
-			
 			Socket socket = new Socket(ip_client,puerto);
 			this.f_out= new ObjectOutputStream(socket.getOutputStream());
 			new OyenteServer(socket,this).start();
@@ -131,7 +130,10 @@ public class Client extends Thread{
 	public int getPuertoPropio() {
 		return this.puerto_propio;
 	}
-		
+	
+	public String get_idUsuario() {
+		return this.id_usuario;
+	}
 	
 	
 

@@ -1,7 +1,12 @@
 package client_src;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,37 +20,33 @@ public class Emisor extends Thread{
 	
 	private Socket socket;
 	private String filename;
+	private String id_usuario;
 	
-	public Emisor(Socket s,String filename) {
+	public Emisor(Socket s,String filename,String id_usuario) {
 	
 			this.socket=s;
-			this.filename= filename;	
+			this.filename= filename;
+			this.id_usuario=id_usuario;
 	}
 	
 	public void run() {
 		
 		try {			
 			//canales para comunicarse con los clientes
+			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+	        FileInputStream fis = new FileInputStream(filename);
 			
+			int count;
+			byte[] bytes = new byte[16 * 1024];
+			while((count = fis.read(bytes)) > 0) {
+				dos.write(bytes, 0, count);
+			}
+				
 			
-			PrintWriter outS = new PrintWriter(socket.getOutputStream(),true); // server to client
-			;
-			File file = new File(filename);
-			if(file.exists()) {
-				BufferedReader input_file = new BufferedReader(new FileReader(file)); //para leer el archivo
-				String linea = input_file.readLine();
-				while(linea != null) {
-					outS.println(linea);
-					linea = input_file.readLine();
-				}
-				input_file.close();
-			}
-			else {
-				outS.println("ErrorNoEArchivo");
-			}
 			
 			//cerramos canales y la conexion
-			outS.close();
+			fis.close();
+			dos.close();
 			socket.close();
 		}
 		catch (Exception e) {
