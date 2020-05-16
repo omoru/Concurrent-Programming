@@ -24,6 +24,7 @@ public class Receptor extends Thread {
 		try {
 
 				//Creamos el canal de comunicación con ip_host por el puerto correspondiente
+				System.out.println("El otro cliente esta esperando en el puerto "+ puerto);
 				Socket socket = new Socket(ip,puerto);
 				descargaArchivo(socket);
 				socket.close();
@@ -38,24 +39,22 @@ public class Receptor extends Thread {
 	private void descargaArchivo(Socket socket) {
 		try {
 			
-			/*String ruta="C:\\Users\\oscar\\Desktop\\Concurrente\\P5\\P5_PC(parte2)\\"+ this.id_usuario;
-	        File directorio = new File(ruta);
-	        if (!directorio.exists()) {
-	            if (directorio.mkdirs()) {
-	        
-	            } else {
-	                System.out.println("Error al crear directorio");
-	            }
-	        }
-	        */
 			DataInputStream dis = new DataInputStream(socket.getInputStream());
 			FileOutputStream fos = new FileOutputStream("prueba\\"+filename);
 			System.out.println("RECIBIENDO");
 			int count;
-		    byte[] bytes = new byte[8192];
+		    byte[] bytes = new byte[16 * 1024];
+		    long  totalbytes=0;
+		    long temp=0;
 		    while((count = dis.read(bytes)) > 0) {
 		    	fos.write(bytes, 0, count);
+		    	totalbytes+=count;
+		    	if(temp < totalbytes) {
+		    		System.out.println("Se han descargado "+ totalbytes+" bytes");
+		    		temp = totalbytes * 4;
+		    	}	    	
 			}
+		    System.out.println("Se han descargado "+ totalbytes+" bytes");
 			
 			System.out.println("Archivo solicitado se ha descargado");
 			fos.close();

@@ -9,9 +9,11 @@ import java.util.ArrayList;
 
 import client_src.Client;
 import msg_src.Mensaje;
+import msg_src.MsgConexion;
 import msg_src.MsgConfirmListaUsuarios;
 import msg_src.MsgConfirmacionCerrarConexion;
 import msg_src.MsgEmitirFichero;
+import msg_src.MsgErrorConexion;
 import msg_src.MsgPreparadoCS;
 import msg_src.MsgPreparadoSC;
 import users_src.FlujosUsuario;
@@ -43,6 +45,12 @@ public class OyenteServer extends Thread{
 					switch(m.getMensaje()) {
 						case "MENSAJE_CONFIRMACION_CONEXION":{
 							System.out.println("Conexion realizada con server");
+							client.getSemaphore().release();
+							break;
+						}
+						case "MENSAJE_ERROR_CONEXION":{
+							client.changeUserName();
+							client.sendMensaje(new MsgConexion(client.getIP(),m.getIPOrigen(), client.get_idUsuario(),((MsgErrorConexion) m).getFicheros()));
 							break;
 						}
 						case "MENSAJE_CONFIRMACION_LISTA_USARIOS":{
@@ -51,10 +59,12 @@ public class OyenteServer extends Thread{
 							break;
 						}
 						case "MENSAJE_EMITIR_FICHERO":{
-							Mensaje mm = new MsgPreparadoCS(((MsgEmitirFichero) m).getIdUsuario(),client.getIP(),client.getPuertoPropio(),
+							ServerSocket s= new ServerSocket(0); // Si metemos 0 como puerto, el socket se encarga de buscar un puerto abierto en el que establece su escucha
+							s.setReuseAddress(true);
+							Mensaje mm = new MsgPreparadoCS(((MsgEmitirFichero) m).getIdUsuario(),client.getIP(),s.getLocalPort(),
 									((MsgEmitirFichero) m).getFilename());
 							client.sendMensaje(mm);
-							ServerSocket s= new ServerSocket(client.getPuertoPropio());
+							
 							new Emisor(s.accept(),((MsgEmitirFichero) m).getFilename(),m.getIdUsuario()).start();
 							break;
 						}

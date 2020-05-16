@@ -13,6 +13,7 @@ import msg_src.MsgConfirmListaUsuarios;
 import msg_src.MsgConfirmacionCerrarConexion;
 import msg_src.MsgConfirmacionConexion;
 import msg_src.MsgEmitirFichero;
+import msg_src.MsgErrorConexion;
 import msg_src.MsgListaUsuarios;import msg_src.MsgPedirFichero;
 import msg_src.MsgPreparadoCS;
 import msg_src.MsgPreparadoSC;
@@ -52,14 +53,19 @@ public class OyenteClient extends Thread {
 				switch(m.getMensaje()) {
 					case "MENSAJE_CONEXION":{
 						//info usuario
+						if(server.userAlreadyExists(((MsgConexion) m).getIdUsuario())) {
+							f_out.writeObject(new MsgErrorConexion(server.getIpServer(),m.getIPOrigen(),((MsgConexion) m).getFicheros()));
+						}
+						else {
+							Usuario u = new Usuario(((MsgConexion) m).getIdUsuario(),m.getIPOrigen(),((MsgConexion) m).getFicheros());
+							//id y canales usuario
+							FlujosUsuario fu= new FlujosUsuario(((MsgConexion) m).getIdUsuario(),f_out,f_in);
+							server.añadirUsuario(u);
+							server.añadirFlujosUsuario(fu);
+							//enviamos mensaje confirmacion
+							f_out.writeObject(new MsgConfirmacionConexion(m.getIPDestino(),m.getIPOrigen()));//del server al cliente
+						}
 						
-						Usuario u = new Usuario(((MsgConexion) m).getIdUsuario(),m.getIPOrigen(),((MsgConexion) m).getFicheros());
-						//id y canales usuario
-						FlujosUsuario fu= new FlujosUsuario(((MsgConexion) m).getIdUsuario(),f_out,f_in);
-						server.añadirUsuario(u);
-						server.añadirFlujosUsuario(fu);
-						//enviamos mensaje confirmacion
-						f_out.writeObject(new MsgConfirmacionConexion(m.getIPDestino(),m.getIPOrigen()));//del server al cliente
 						break;
 					}
 					case "MENSAJE_LISTA_USARIOS":{

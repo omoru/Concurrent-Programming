@@ -29,7 +29,6 @@ public class Server extends Thread {
 		ServerSocket s;
 		try {
 			s = new ServerSocket(PUERTO);
-			System.out.println("IPPPP:");
 			while(true) {
 				System.out.println("Esperando nuevas conexiones...");
 				new OyenteClient(s.accept(),this).start(); // detenemos al servidor hasta que llega un cliente
@@ -43,6 +42,12 @@ public class Server extends Thread {
 		
 	}
 	
+	public String getIpServer() {
+		return this.ip_server;
+	}
+	public boolean userAlreadyExists(String id_user) {
+		return monitor.userAlreadyExists(id_user);
+	}
 	public void añadirUsuario(Usuario u) {
 		monitor.addUser(u);
 	}

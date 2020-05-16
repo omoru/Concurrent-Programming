@@ -24,6 +24,13 @@ public class MonitorServer {
 	}
 	
 	
+	public boolean userAlreadyExists(String id_usuario) {
+		for(int i=0; i < tabla_informacion_usuarios.size();i++){
+			if(tabla_informacion_usuarios.get(i).getIdUsuario().equals(id_usuario))
+				return true;
+		}
+		return false;
+	}
 	public String getOwnerFile(String filename) {
 		String id_owner=null;
 		boolean encontrado= false;
