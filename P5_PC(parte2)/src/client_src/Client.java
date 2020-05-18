@@ -37,6 +37,10 @@ public class Client extends Thread{
 		
 	}
 	
+	public Semaphore getSemaphore() {
+		return this.waitConected;
+	}
+	
 	public void run() {
 		try {
 			
@@ -48,18 +52,15 @@ public class Client extends Thread{
 			System.out.println("Introduzca su nombre porfavor ");
 			this.id_usuario = sc.nextLine();
 			
-			
-			
 			System.out.println("Introduce uno a uno los ficheros que tienes disponibles e introduce EXIT cuando hayas terminado:");
-			
 			String fichero= sc.nextLine();
 			while(!fichero.equalsIgnoreCase("EXIT")) {
 				File f = new File(fichero);
 				if(f.exists()) {
 					ficheros.add(fichero);
 				}
-				else
-					System.out.println("El archivo no existe, introduzca otro o EXIT para salir");
+				else System.out.println("El archivo no existe, introduzca otro o EXIT para salir");
+		
 				fichero=sc.nextLine();
 				
 			}
@@ -71,6 +72,7 @@ public class Client extends Thread{
 			waitConected.acquire();// el proceso cliente se detiene hasta que le despierta el oyente cliente al recibir confirmación conexión
 			////////////////////////////
 			System.out.println("Bienvenido, "+this.id_usuario);
+			
 			int option;
 			do{
 				displayMenu();
@@ -98,35 +100,28 @@ public class Client extends Thread{
 		System.out.println("1 -consultar lista usuarios");
 		System.out.println("2 -pedir fichero");
 		System.out.println("3 -salir");
-		System.out.println("Introduzca la opcion deseada: ");		
+		System.out.println("Introduzca el numero de opcion: ");		
 	}
+	
 	
 	private Mensaje procesaOpcion(int op,String nombre,String ip_client,String ip_host) {
 		
 		Mensaje m = null;
 		
-		switch(op) {
-			
+		switch(op) {			
 			case 1:{//enviar MENSAJE_LISTA_USARIOS
 				m = new MsgListaUsuarios(nombre,ip_client,ip_host);
 				break;
 			}
-			
-			case 2:{//enviar MENSAJE_PEDIR_FICHERO 3
-				
+			case 2:{//enviar MENSAJE_PEDIR_FICHERO
 				try {
 					System.out.println("Introduce nombre fichero:");
 					BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 					String filename = br.readLine();
 					m = new MsgPedirFichero(nombre,ip_client, ip_host, filename);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+				} catch (IOException e) {e.printStackTrace();}				
 				break;
 			}
-			
 			case 3:{//enviar MENSAJE_CERRAR_CONEXION
 				m = new MsgCerrarConexion(ip_client,ip_host,nombre);
 				break;
@@ -136,9 +131,8 @@ public class Client extends Thread{
 		return m;		
 	}
 	
-	public Semaphore getSemaphore() {
-		return this.waitConected;
-	}
+	
+
 	
 	public void sendMensaje(Mensaje m) {
 		try {

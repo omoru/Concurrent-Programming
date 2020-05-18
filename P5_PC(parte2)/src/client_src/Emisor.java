@@ -42,8 +42,6 @@ public class Emisor extends Thread{
 				dos.write(bytes, 0, count);
 			}
 				
-			
-			
 			//cerramos canales y la conexion
 			fis.close();
 			dos.close();

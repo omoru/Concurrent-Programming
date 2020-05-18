@@ -24,7 +24,7 @@ public class Receptor extends Thread {
 		try {
 
 				//Creamos el canal de comunicación con ip_host por el puerto correspondiente
-				System.out.println("El otro cliente esta esperando en el puerto "+ puerto);
+				System.out.println("El emisor esta esperando en el puerto "+ puerto);
 				Socket socket = new Socket(ip,puerto);
 				descargaArchivo(socket);
 				socket.close();
@@ -64,8 +64,6 @@ public class Receptor extends Thread {
 			e.printStackTrace();
 
 		}
-		
-		
-
 	}
+
 }
