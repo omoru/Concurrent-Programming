@@ -1,12 +1,11 @@
 package client_src;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
+
 
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
@@ -26,19 +25,17 @@ public class Client extends Thread{
 		
 	private int puerto;//puerto de conexion al server
 	private String ip_client;//ip del cliente
-	private String mode;
-	private OyenteServer OS;
+	private String mode;//gui o batch
+	private OyenteServer OS;//oyenteservidor
 	private ObjectOutputStream f_out;
 	private String ip_host;//ip server
 	private String id_usuario;
-	//private ArrayList<String> ficheros;//ficheros que tiene el usuario
 	private Semaphore waitConected = new Semaphore(0);
 	
 	public Client(int puerto, String ip_client, String ip_host,String runMode) {
 		this.puerto = puerto;
 		this.ip_client = ip_client;
 		this.ip_host= ip_host;
-		//this.ficheros = new ArrayList<String>();
 		this.mode= runMode;
 		
 	}
@@ -50,22 +47,42 @@ public class Client extends Thread{
 	public String getMode() {
 		return this.mode;
 	}
+	
+	public String getIP_HOST() {
+		return this.ip_host;
+	}
+	public String getIP() {
+		return ip_client;
+	}
+	
+	
+	
+	public String get_idUsuario() {
+		return this.id_usuario;
+	}
+	
+	public void setIdUsuario(String id_user) {
+		this.id_usuario= id_user;
+	}
+	
+	public void sendMensaje(Mensaje m) {
+		try {
+			f_out.writeObject(m);
+		} catch (IOException e) {
+			System.out.println("No se pudo enviar el mensaje");
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void run() {
-		
-			
 			if(mode.equalsIgnoreCase("GUI")) {
-				runGUI();
-				
+				runGUI();	
 			}
 			else if(mode.equalsIgnoreCase("BATCH")) 
-				runBatch();
-				
-			
-		
-		
-		
-		
+				runBatch();		
 	}
+	
 	
 	private void runGUI() {
 		try {			
@@ -74,13 +91,10 @@ public class Client extends Thread{
 				name = JOptionPane.showInputDialog("El nombre no puede estar vacio");
 			}
 			this.id_usuario = name;
+			
 			Socket socket = new Socket(ip_client,puerto);
 			this.f_out= new ObjectOutputStream(socket.getOutputStream());
 			this.OS =new OyenteServer(socket,this);
-				
-
-			
-			
 			Client cliente = this;
 			SwingUtilities.invokeAndWait(new Runnable() {
 				
@@ -92,7 +106,7 @@ public class Client extends Thread{
 			});
 		
 			OS.start();
-			Mensaje m = new MsgConexion(ip_client,ip_host,id_usuario,new ArrayList<String>());
+			Mensaje m = new MsgConexion(ip_client,ip_host,id_usuario);
 			f_out.writeObject(m);	
 		}catch(Exception e) {
 			System.out.println("Mal funcionamiento en Cliente");
@@ -101,6 +115,11 @@ public class Client extends Thread{
 		
 		}	
 	}
+	public void addObserver(OSobserver o) {
+		this.OS.addObserver(o);
+		
+	}
+	
 	
 	private void runBatch() {
 		try {
@@ -111,22 +130,9 @@ public class Client extends Thread{
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Introduzca su nombre porfavor ");
 			this.id_usuario = sc.nextLine();
-			
-			/*System.out.println("Introduce uno a uno los ficheros que tienes disponibles e introduce EXIT cuando hayas terminado:");
-			String fichero= sc.nextLine();
-			while(!fichero.equalsIgnoreCase("EXIT")) {
-				File f = new File(fichero);
-				if(f.exists()) {
-					ficheros.add(fichero);
-				}
-				else System.out.println("El archivo no existe, introduzca otro o EXIT para salir");
 		
-				fichero=sc.nextLine();
-				
-			}
-			*/
 			new OyenteServer(socket,this).start();
-			Mensaje m = new MsgConexion(ip_client,ip_host,id_usuario,new ArrayList<String>());
+			Mensaje m = new MsgConexion(ip_client,ip_host,id_usuario);
 			f_out.writeObject(m);	
 			/////////////////////////////
 			waitConected.acquire();// el proceso cliente se detiene hasta que le despierta el oyente cliente al recibir confirmación conexión
@@ -153,15 +159,7 @@ public class Client extends Thread{
 	}
 	
 		
-	private void displayMenu() {
-		System.out.println("Menú:");
-		System.out.println("==========");
-		System.out.println("1 -consultar lista usuarios");
-		System.out.println("2 -pedir fichero");
-		System.out.println("3-añadir fichero");
-		System.out.println("0 -salir");
-		System.out.println("Introduzca el numero de opcion: ");		
-	}
+	
 	
 	
 	private Mensaje procesaOpcion(int op,String nombre,String ip_client,String ip_host) {
@@ -184,13 +182,14 @@ public class Client extends Thread{
 			}
 			case 3:{
 				try {
-					System.out.println("Introduce nombre fichero a añadir:");
+					System.out.println("Introduce nombre archivo a añadir:");
 					BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-					String filename;
+					String filename,ruta_filename;
 					filename = br.readLine();
-					m= new MsgAñadirArchivo(ip_client, ip_host, filename, id_usuario);
+					System.out.println("Introduce la ruta del archivo:");
+					ruta_filename= br.readLine();
+					m= new MsgAñadirArchivo(ip_client, ip_host, filename,ruta_filename,id_usuario);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
@@ -206,49 +205,28 @@ public class Client extends Thread{
 	}
 	
 	
-	
-	public void addObserver(OSobserver o) {
-		this.OS.addObserver(o);
-		
+	private void displayMenu() {
+		System.out.println("Menú:");
+		System.out.println("==========");
+		System.out.println("1 -consultar lista usuarios");
+		System.out.println("2 -pedir fichero");
+		System.out.println("3-añadir fichero");
+		System.out.println("0 -salir");
+		System.out.println("Introduzca el numero de opcion: ");		
 	}
 	
 
 	
-	public String getIP_HOST() {
-		return this.ip_host;
-	}
-	public void sendMensaje(Mensaje m) {
-		try {
-			f_out.writeObject(m);
-		} catch (IOException e) {
-			System.out.println("No se pudo enviar el mensaje");
-			e.printStackTrace();
-		}
-	}
-	
-	public void changeUserName() {
-		Scanner sc = new Scanner(System.in);
+	public void changeUserName() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Introduzca otro id, el que ha elegido esta repetido: ");
-		String nombre = sc.nextLine();
+		String nombre = br.readLine();
 		this.id_usuario = nombre;
 		
 	}
 	
 	
 	
-	public String getIP() {
-		return ip_client;
-	}
-	
-	
-	
-	public String get_idUsuario() {
-		return this.id_usuario;
-	}
-	
-	public void setIdUsuario(String id_user) {
-		this.id_usuario= id_user;
-	}
 
 	
 	

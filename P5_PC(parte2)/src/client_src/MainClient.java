@@ -1,21 +1,10 @@
 package client_src;
 
-import java.util.Scanner;
-
-import javax.swing.SwingUtilities;
-
-import gui.ClientMainWindow;
-
-
 
 public class MainClient {
 
 	public static void main(String[] args) {
-		
-		
-		start(args);
-		
-			
+			start(args);			
 	}
 	
 	private static void start(String[] args) {
@@ -28,8 +17,12 @@ public class MainClient {
 		if(mode.equalsIgnoreCase("GUI")) {
 			startGUImode(args);
 		}
-		else {
+		else if(mode.equalsIgnoreCase("BATCH")){
 			startBatchMode(args);			
+		}
+		else {
+			System.out.println("Introduce un modo valido por argumentos");
+			return;
 		}
 		
 	}
@@ -46,12 +39,11 @@ public class MainClient {
 	
 	private static void startGUImode(String[] args) {
 		try {
-			String mode = args[4];
+			String mode = args[3];
 			String ip_host = args[0];//ip server
 			int PUERTO=Integer.parseInt(args[1]);
 			String ip_client = args[2];//ip cliente
-			int puerto_propio=Integer.parseInt(args[3]);
-			Client client = new Client(PUERTO,ip_client,puerto_propio,ip_host,mode);
+			Client client = new Client(PUERTO,ip_client,ip_host,mode);
 			client.start();	
 			
 		}catch(Exception e) {

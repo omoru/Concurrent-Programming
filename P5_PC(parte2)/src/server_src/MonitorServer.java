@@ -9,6 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import msg_src.MsgConfirmacionAddFile;
+import users_src.File;
 import users_src.FlujosUsuario;
 import users_src.Usuario;
 
@@ -39,8 +40,8 @@ public class MonitorServer {
 		String id_owner=null;
 		boolean encontrado= false;
 		for(int i=0; i < tabla_informacion_usuarios.size() && !encontrado;i++){
-			for(String s:tabla_informacion_usuarios.get(i).getFicheros()) {
-				if(s.equals(filename)) {
+			for(File f:tabla_informacion_usuarios.get(i).getFiles()) {
+				if(f.getFilename().equals(filename)) {
 					id_owner= tabla_informacion_usuarios.get(i).getIdUsuario();
 					encontrado=true;
 					break;					

@@ -111,7 +111,7 @@ public class ControlPanel extends JPanel implements OSobserver{
 			name = JOptionPane.showInputDialog("El id no puede ser vacio");
 		}
 		ctrlClient.setIdUsuario(name);
-		ctrlClient.sendMensaje(new MsgConexion(ctrlClient.getIP(),msg.getIPOrigen(), name,new ArrayList<String>()));
+		ctrlClient.sendMensaje(new MsgConexion(ctrlClient.getIP(),msg.getIPOrigen(), name));
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class MsgPreparadoCS extends Mensaje {
 		this.my_ip = my_ip;
 		this.puerto_propio= puerto_propio;
 		this.filename=filename;
-		
+			
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -33,6 +33,8 @@ public class MsgPreparadoCS extends Mensaje {
 	public String getFilename() {
 		return this.filename;
 	}
+	
+	
 
 	
 }

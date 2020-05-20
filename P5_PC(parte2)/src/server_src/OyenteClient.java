@@ -20,6 +20,7 @@ import msg_src.MsgErrorConexion;
 import msg_src.MsgListaUsuarios;import msg_src.MsgPedirFichero;
 import msg_src.MsgPreparadoCS;
 import msg_src.MsgPreparadoSC;
+import users_src.File;
 import users_src.FlujosUsuario;
 import users_src.Usuario;
 
@@ -99,16 +100,15 @@ public class OyenteClient extends Thread {
 	
 	private void añadirArchivo(MsgAñadirArchivo msg) throws IOException {
 		if(server.addFile(msg.getFilename(),msg.getRuta_filename(), msg.getIDusuario()))
-			f_out.writeObject(new MsgConfirmacionAddFile(server.getIpServer(),msg.getIPOrigen(), msg.getFilename()));
+			f_out.writeObject(new MsgConfirmacionAddFile(server.getIpServer(),msg.getIPOrigen()));
 		
 	}
 	private void realizarConexion(MsgConexion msg) throws IOException {
-		//info usuario
 		if(server.userAlreadyExists(msg.getIdUsuario())) {
-			f_out.writeObject(new MsgErrorConexion(server.getIpServer(),msg.getIPOrigen(),msg.getFicheros()));
+			f_out.writeObject(new MsgErrorConexion(server.getIpServer(),msg.getIPOrigen()));
 		}
 		else {
-			Usuario u = new Usuario(msg.getIdUsuario(),msg.getIPOrigen(),msg.getFicheros());
+			Usuario u = new Usuario(msg.getIdUsuario(),msg.getIPOrigen());
 			//id y canales usuario
 			FlujosUsuario fu= new FlujosUsuario(msg.getIdUsuario(),f_out,f_in);
 			server.añadirUsuario(u);
@@ -134,9 +134,9 @@ public class OyenteClient extends Thread {
 		
 		for(Usuario u: server.getUsersInfo()) {
 			if(u.getIdUsuario().equalsIgnoreCase(id_user)) {
-				for(int i=0; i < u.getFicheros().size();i++) {
-					if(u.getFicheros().get(i).equalsIgnoreCase(msg.getFilename())) {
-						ruta_archivo= u.getRutasFicheros().get(i);
+				for(File f : u.getFiles()) {
+					if(f.getFilename().equalsIgnoreCase(msg.getFilename())) {
+						ruta_archivo= f.getRuta();
 						break;
 					}
 				}
@@ -146,14 +146,13 @@ public class OyenteClient extends Thread {
 		}
 		System.out.println("aaaaaaaaaaaaaaaaaaaaa"+ruta_archivo);
 		ObjectOutputStream f_out2 = server.getOutputStreamOC(id_user);
-		f_out2.writeObject(new MsgEmitirFichero(ruta_archivo,msg.getIdUsuario()));
+		f_out2.writeObject(new MsgEmitirFichero(ruta_archivo,msg.getFilename(),msg.getIdUsuario()));
 		
 	}
 	
 	private void avisarPeerReceptor(MsgPreparadoCS msg) throws IOException {
 		ObjectOutputStream f_out1 = server.getOutputStreamOC(msg.getIdUsuario());
-		f_out1.writeObject(new MsgPreparadoSC(msg.getMyIP(),msg.getPuertoPropio(),
-				msg.getFilename()));
+		f_out1.writeObject(new MsgPreparadoSC(msg.getMyIP(),msg.getPuertoPropio(),msg.getFilename()));
 		
 	}
 

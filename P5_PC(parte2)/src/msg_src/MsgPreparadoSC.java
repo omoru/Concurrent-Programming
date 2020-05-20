@@ -11,6 +11,7 @@ public class MsgPreparadoSC extends Mensaje{
 		this.ip_conexion=ip_conexion;
 		this.puerto_conexion=puerto_conexion;
 		this.filename=filename;
+		
 	}
 	public int getPuertoPropio() {
 		return this.puerto_conexion;
@@ -23,6 +24,7 @@ public class MsgPreparadoSC extends Mensaje{
 	public String getFilename() {
 		return this.filename;
 	}
+	
 
 
 }

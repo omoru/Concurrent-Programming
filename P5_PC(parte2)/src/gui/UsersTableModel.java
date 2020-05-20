@@ -11,6 +11,7 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import client_src.Client;
 import client_src.OSobserver;
 import msg_src.MsgErrorConexion;
+import users_src.File;
 import users_src.Usuario;
 
 public class UsersTableModel extends AbstractTableModel implements OSobserver{
@@ -76,8 +77,8 @@ public class UsersTableModel extends AbstractTableModel implements OSobserver{
 		ArrayList<TableFiles> new_table = new ArrayList<TableFiles>();
 		
 		for(Usuario u: usuarios) {
-			for(String filename: u.getFicheros()) {
-				new_table.add(new TableFiles(filename,u.getIdUsuario()));
+			for(File file: u.getFiles()) {
+				new_table.add(new TableFiles(file.getFilename(),u.getIdUsuario()));
 			}
 		}
 		

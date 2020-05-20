@@ -14,7 +14,7 @@ public class MsgConfirmListaUsuarios extends Mensaje {
 		// TODO Auto-generated constructor stub
 	}
 	public ArrayList<Usuario> getInfo_usuarios() {
-		return (this.info_usuarios);
+		return this.info_usuarios;
 	}
 
 }
