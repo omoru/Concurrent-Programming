@@ -1,10 +1,12 @@
 package msg_src;
 
-import java.util.ArrayList;
 
 public class MsgConexion extends Mensaje {
 
-	private String id_usuario;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public MsgConexion(String ip_origen, String ip_dest,String id_usuario) {
 		super(ip_origen,ip_dest, "MENSAJE_CONEXION");
@@ -12,10 +14,7 @@ public class MsgConexion extends Mensaje {
 	}
 	
 	
-	public String getIdUsuario() {
-		return id_usuario;
-	}
-	
+
 
 	
 	

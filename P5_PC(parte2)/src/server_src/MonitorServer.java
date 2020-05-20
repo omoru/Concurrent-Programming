@@ -2,22 +2,17 @@ package server_src;
 
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
-import msg_src.MsgConfirmacionAddFile;
 import users_src.File;
 import users_src.FlujosUsuario;
 import users_src.Usuario;
 
 public class MonitorServer {
-	//Contiene id, ip y ficheros de los usuarios
-	private ArrayList<Usuario> tabla_informacion_usuarios;
-	//Contiene id, flujo de entrada y flujo de salida de los usuarios
-	private ArrayList<FlujosUsuario> tabla_flujos_usuarios;
+	
+	private ArrayList<Usuario> tabla_informacion_usuarios;//Contiene id, ip y ficheros de los usuarios
+	private ArrayList<FlujosUsuario> tabla_flujos_usuarios;	//Contiene id, flujo de entrada y flujo de salida de los usuarios
 	final Lock lockTablaFlujos = new ReentrantLock();
 	final Lock lockTablaInfo = new ReentrantLock();
 	

@@ -1,14 +1,13 @@
 package msg_src;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import users_src.Usuario;
-
 
 public abstract class Mensaje implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected String ip_origen;
 	protected String id_usuario;
 	protected String ip_destino;

@@ -4,31 +4,27 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
-import javax.swing.WindowConstants;
-
 import client_src.Client;
 import client_src.OSobserver;
-import msg_src.Mensaje;
 import msg_src.MsgAñadirArchivo;
 import msg_src.MsgCerrarConexion;
 import msg_src.MsgConexion;
 
 import msg_src.MsgErrorConexion;
 import msg_src.MsgListaUsuarios;
-import msg_src.MsgPedirFichero;
 import users_src.Usuario;
 
-@SuppressWarnings("serial")
 public class ControlPanel extends JPanel implements OSobserver{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Client ctrlClient;
 	private JLabel id_user;
 	private JButton getUserList;
@@ -120,11 +116,6 @@ public class ControlPanel extends JPanel implements OSobserver{
 		
 	}
 
-	@Override
-	public void onFileAdded(ArrayList<Usuario> usuarios) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void onFileDownloaded(String filename,long size) {

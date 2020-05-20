@@ -1,7 +1,5 @@
 package server_src;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 
 public class MainServer {
 
@@ -17,7 +15,6 @@ public class MainServer {
 			int PUERTO = Integer.parseInt(args[1]);
 			MonitorServer monitor = new MonitorServer();
 			//Iniciamos el server
-			
 			new Server(PUERTO,ip_server,monitor).start();
 	}
 }

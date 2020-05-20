@@ -1,21 +1,21 @@
 package gui;
 
 import java.util.ArrayList;
-
-import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import client_src.Client;
 import client_src.OSobserver;
 import msg_src.MsgErrorConexion;
 import users_src.File;
 import users_src.Usuario;
 
+
 public class UsersTableModel extends AbstractTableModel implements OSobserver{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String[] columNames= {"ARCHIVO","USUARIO"};
 	private ArrayList<TableFiles> table_info_users;
 	
@@ -77,6 +77,8 @@ public class UsersTableModel extends AbstractTableModel implements OSobserver{
 		ArrayList<TableFiles> new_table = new ArrayList<TableFiles>();
 		
 		for(Usuario u: usuarios) {
+			if(u.getFiles().size()==0)
+				new_table.add(new TableFiles(null,u.getIdUsuario()));
 			for(File file: u.getFiles()) {
 				new_table.add(new TableFiles(file.getFilename(),u.getIdUsuario()));
 			}
@@ -97,11 +99,7 @@ public class UsersTableModel extends AbstractTableModel implements OSobserver{
 		update(usuarios);
 		
 	}
-	@Override
-	public void onFileAdded(ArrayList<Usuario> usuarios) {
-		
-		
-	}
+	
 	@Override
 	public void onFileDownloaded(String filename, long size) {
 		// TODO Auto-generated method stub

@@ -3,7 +3,6 @@ package server_src;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -99,7 +98,7 @@ public class OyenteClient extends Thread {
 	}
 	
 	private void añadirArchivo(MsgAñadirArchivo msg) throws IOException {
-		if(server.addFile(msg.getFilename(),msg.getRuta_filename(), msg.getIDusuario()))
+		if(server.addFile(msg.getFilename(),msg.getRuta_filename(), msg.getIdUsuario()))
 			f_out.writeObject(new MsgConfirmacionAddFile(server.getIpServer(),msg.getIPOrigen()));
 		
 	}
@@ -146,7 +145,7 @@ public class OyenteClient extends Thread {
 		}
 		System.out.println("aaaaaaaaaaaaaaaaaaaaa"+ruta_archivo);
 		ObjectOutputStream f_out2 = server.getOutputStreamOC(id_user);
-		f_out2.writeObject(new MsgEmitirFichero(ruta_archivo,msg.getFilename(),msg.getIdUsuario()));
+		f_out2.writeObject(new MsgEmitirFichero(msg.getIPDestino(),msg.getIPOrigen(),ruta_archivo,msg.getFilename(),msg.getIdUsuario()));
 		
 	}
 	

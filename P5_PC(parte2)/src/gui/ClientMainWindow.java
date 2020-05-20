@@ -2,20 +2,18 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-
 import client_src.Client;
+
 
 public class ClientMainWindow extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Client ctrlClient;
 	ControlPanel control_panel;
 	UsersTable users_table;
@@ -43,14 +41,6 @@ public class ClientMainWindow extends JFrame {
 		splitPaneV.setLeftComponent(panelTablaUsuarios);
 		splitPaneV.setRightComponent(panelTablaDownloads);
 		
-		/*JPanel panelCentral = this.creaPanelCentral();
-		this.createTable(panelCentral);
-		panelPrincipal.add(panelCentral,BorderLayout.CENTER);
-		JPanel panelInferior = this.creaPanelInferior();
-		this.createTableDownloads(panelInferior);
-		panelPrincipal.add(panelInferior,BorderLayout.PAGE_END);
-		
-*/
 		this.setContentPane(panelPrincipal);
 		this.pack();
 		this.setVisible(true);

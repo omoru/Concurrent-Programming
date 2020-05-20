@@ -2,26 +2,25 @@ package msg_src;
 
 public class MsgPreparadoCS extends Mensaje {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int puerto_propio;
-	private String id_user_destination;
 	private String my_ip;
 	private String filename;
 
 	
-	public MsgPreparadoCS(String id_user_destination, String my_ip, int puerto_propio,String filename) {
-		super(null, null, "MENSAJE_PREPARADO_CLIENTESERVIDOR");
-		this.id_user_destination=id_user_destination;
+	public MsgPreparadoCS(String id_user_destination,String ip_server, String my_ip, int puerto_propio,String filename) {
+		super(my_ip, ip_server, "MENSAJE_PREPARADO_CLIENTESERVIDOR");
+		this.id_usuario=id_user_destination;
 		this.my_ip = my_ip;
 		this.puerto_propio= puerto_propio;
 		this.filename=filename;
 			
 		// TODO Auto-generated constructor stub
 	}
-	
-	public String getIdUsuario(){
-		return this.id_user_destination;
-	}
-	
+
 	public int getPuertoPropio() {
 		return this.puerto_propio;
 	}

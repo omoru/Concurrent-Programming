@@ -14,45 +14,24 @@ public class MainClient {
 			return;
 		}
 		String mode = args[3];
-		if(mode.equalsIgnoreCase("GUI")) {
-			startGUImode(args);
-		}
-		else if(mode.equalsIgnoreCase("BATCH")){
-			startBatchMode(args);			
+		String ip_host = args[0];//ip server
+		int PUERTO=Integer.parseInt(args[1]);
+		String ip_client = args[2];//ip cliente
+		if(mode.equalsIgnoreCase("GUI") ||mode.equalsIgnoreCase("BATCH")) {
+			Client client = new Client(PUERTO,ip_client,ip_host,mode);
+			client.start();		
 		}
 		else {
 			System.out.println("Introduce un modo valido por argumentos");
 			return;
 		}
 		
-	}
-	
-	
-	private static void startBatchMode(String[] args) {
-		String mode = args[3];
-		String ip_host = args[0];//ip server
-		int PUERTO=Integer.parseInt(args[1]);
-		String ip_client = args[2];//ip cliente
-		Client client = new Client(PUERTO,ip_client,ip_host,mode);
-		client.start();	
-	}
-	
-	private static void startGUImode(String[] args) {
-		try {
-			String mode = args[3];
-			String ip_host = args[0];//ip server
-			int PUERTO=Integer.parseInt(args[1]);
-			String ip_client = args[2];//ip cliente
-			Client client = new Client(PUERTO,ip_client,ip_host,mode);
-			client.start();	
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		
 		
 	}
+	
+
+	
+	
 
 
 

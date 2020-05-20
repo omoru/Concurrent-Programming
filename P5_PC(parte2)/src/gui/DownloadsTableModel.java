@@ -10,8 +10,13 @@ import client_src.OSobserver;
 import msg_src.MsgErrorConexion;
 import users_src.Usuario;
 
+
 public class DownloadsTableModel extends AbstractTableModel implements OSobserver {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String[] columNames= {"ARCHIVO","KB DESCARGADOS"};
 	private ArrayList<Download> table_info_downloads;
 	
@@ -89,11 +94,7 @@ public class DownloadsTableModel extends AbstractTableModel implements OSobserve
 		
 	}
 
-	@Override
-	public void onFileAdded(ArrayList<Usuario> usuarios) {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	@Override
 	public void onFileDownloaded(String filename, long size) {

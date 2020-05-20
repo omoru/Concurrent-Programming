@@ -6,24 +6,21 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-
 import javax.swing.BorderFactory;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
-
 import client_src.Client;
-import msg_src.MsgAñadirArchivo;
 import msg_src.MsgPedirFichero;
 
+
 public class UsersTable extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	JTable table;
 	public UsersTable(Client ctrlClient) {
 		setLayout(new BorderLayout());
@@ -43,11 +40,14 @@ public class UsersTable extends JPanel {
 	            Point p = me.getPoint();
 	            int row = table2.rowAtPoint(p);
 	            String filename=(String) table2.getValueAt(row, 0);
-	            int n = JOptionPane.showConfirmDialog(null, "¿Descargar archivo "+filename+"?","DESCARGA",JOptionPane.YES_NO_OPTION);
-	            if (n == JOptionPane.YES_OPTION) {
-	            	ctrlClient.sendMensaje(new MsgPedirFichero(ctrlClient.get_idUsuario(),ctrlClient.getIP(),
-	            			ctrlClient.getIP_HOST(), filename));
+	            if(filename !=null) {
+	            	int n = JOptionPane.showConfirmDialog(null, "¿Descargar archivo "+filename+"?","DESCARGA",JOptionPane.YES_NO_OPTION);
+		            if (n == JOptionPane.YES_OPTION) {
+		            	ctrlClient.sendMensaje(new MsgPedirFichero(ctrlClient.get_idUsuario(),ctrlClient.getIP(),
+		            			ctrlClient.getIP_HOST(), filename));
+		            }
 	            }
+	            
 	                  
 	        }
 	    });  

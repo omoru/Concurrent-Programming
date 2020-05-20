@@ -2,23 +2,18 @@ package client_src;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import client_src.Client;
 import msg_src.Mensaje;
 import msg_src.MsgConexion;
 import msg_src.MsgConfirmListaUsuarios;
-import msg_src.MsgConfirmacionAddFile;
 import msg_src.MsgConfirmacionCerrarConexion;
 import msg_src.MsgEmitirFichero;
 import msg_src.MsgErrorConexion;
 import msg_src.MsgPreparadoCS;
 import msg_src.MsgPreparadoSC;
 import users_src.File;
-import users_src.FlujosUsuario;
 import users_src.Usuario;
 
 public class OyenteServer extends Thread{
@@ -27,6 +22,8 @@ public class OyenteServer extends Thread{
 	private ObjectInputStream f_in; // flujo entrada a cliente
 	private Client client;
 	private ArrayList<OSobserver> observers;
+	
+	
 	public OyenteServer(Socket s,Client client) {
 		try {
 			this.client=client;
@@ -158,7 +155,6 @@ public class OyenteServer extends Thread{
 						socket.close();
 						f_in.close();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					e.printStackTrace();
@@ -170,20 +166,15 @@ public class OyenteServer extends Thread{
 		
 	}
 	
-	private void reintentarConexion(MsgErrorConexion msg) {
-		try {
-			client.changeUserName();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private void reintentarConexion(MsgErrorConexion msg) throws IOException {
+		client.changeUserName();
 		client.sendMensaje(new MsgConexion(client.getIP(),msg.getIPOrigen(), client.get_idUsuario()));
 	}
 	
 	private void enviarArchivo(MsgEmitirFichero msg) throws IOException {
 		ServerSocket sk= new ServerSocket(0); // Si metemos 0 como puerto, el socket se encarga de buscar un puerto abierto en el que establece su escucha
 		sk.setReuseAddress(true);
-		Mensaje mm = new MsgPreparadoCS(msg.getIdUsuario(),client.getIP(),sk.getLocalPort(),msg.getFilename());
+		Mensaje mm = new MsgPreparadoCS(msg.getIdUsuario(),msg.getIPOrigen(),client.getIP(),sk.getLocalPort(),msg.getFilename());
 		client.sendMensaje(mm);
 		new Emisor(sk,sk.accept(),msg.getRutaFilename()).start();//peerEmisor
 	}

@@ -3,11 +3,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
-
 import users_src.FlujosUsuario;
 import users_src.Usuario;
-import java.util.concurrent.Semaphore;
+
 
 public class Server extends Thread {
 	

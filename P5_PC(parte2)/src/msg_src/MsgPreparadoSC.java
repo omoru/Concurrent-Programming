@@ -2,6 +2,10 @@ package msg_src;
 
 public class MsgPreparadoSC extends Mensaje{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String ip_conexion;
 	private int puerto_conexion;
 	private String filename;

@@ -5,6 +5,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class FlujosUsuario implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String id_usuario;
 	private ObjectOutputStream fout;
 	private ObjectInputStream fin;

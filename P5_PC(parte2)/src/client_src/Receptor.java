@@ -55,7 +55,7 @@ public class Receptor extends Thread {
 	
 	private void descargaArchivoGUI(Socket socket) throws IOException{
 		
-		String filename = JOptionPane.showInputDialog("Introduzca como quiere guardar el archivo:");
+		String filename = JOptionPane.showInputDialog("Introduzca como quiere guardar el archivo(sin la extension de archivo):");
 		while(filename.length()==0) {
 			filename = JOptionPane.showInputDialog("El nombre no puede estar vacio");
 		}
@@ -70,7 +70,7 @@ public class Receptor extends Thread {
 	    	for(int i=0; i <observers.size();i++)observers.get(i).onDownloading(filename,totalbytes/1000);
 		}
 	    for(int i=0; i <observers.size();i++)observers.get(i).onDownloading(filename,totalbytes/1000);
-	    for(int i=0; i <observers.size();i++)observers.get(i).onFileDownloaded(filename,totalbytes/1000);
+	    for(int i=0; i <observers.size();i++)observers.get(i).onFileDownloaded(filename + this.file_extension,totalbytes/1000);
 	    
 		fos.close();
         dis.close();
@@ -79,7 +79,7 @@ public class Receptor extends Thread {
 	}
 	private void descargaArchivoBatch(Socket socket) throws Exception {
 			
-			System.out.println("Introduce como quieres guardar el archivo:");
+			System.out.println("Introduce como quieres guardar el archivo(sin la extension de archivo):");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			String filename = br.readLine();
 			
