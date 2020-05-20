@@ -116,6 +116,13 @@ public class DownloadsTableModel extends AbstractTableModel implements OSobserve
 	}
 
 
+	@Override
+	public void onFileAdded() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	
 
 }

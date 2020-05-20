@@ -3,6 +3,7 @@ package client_src;
 
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -11,7 +12,8 @@ public class Emisor extends Thread{
 	private Socket socket;
 	private String filename;
 	private ServerSocket sk;
-	
+	private DataOutputStream dos;
+	private FileInputStream fis;
 	
 	
 	public Emisor(ServerSocket sk,Socket s,String filename) {
@@ -24,8 +26,8 @@ public class Emisor extends Thread{
 		
 		try {			
 			//canales para comunicarse con los clientes
-			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-	        FileInputStream fis = new FileInputStream(filename);
+			dos = new DataOutputStream(socket.getOutputStream());
+	        fis = new FileInputStream(filename);
 			
 			int count;
 			byte[] bytes = new byte[16 * 1024];
@@ -37,15 +39,17 @@ public class Emisor extends Thread{
 			fis.close();
 			dos.close();
 			socket.close();
-			this.sk.close();
+			sk.close();
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.out.println("Algo ha fallado en la conexión");
 			e.printStackTrace();
-		} 
+			return;
+		}
+				
 		
-}
+		
+	}
 
 
 }

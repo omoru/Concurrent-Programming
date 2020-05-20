@@ -1,11 +1,9 @@
 package client_src;
 
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -55,10 +53,11 @@ public class Receptor extends Thread {
 	
 	private void descargaArchivoGUI(Socket socket) throws IOException{
 		
-		String filename = JOptionPane.showInputDialog("Introduzca como quiere guardar el archivo(sin la extension de archivo):");
-		while(filename.length()==0) {
-			filename = JOptionPane.showInputDialog("El nombre no puede estar vacio");
+		String file = JOptionPane.showInputDialog("Introduzca como quiere guardar el archivo(sin la extension de archivo):");
+		while(file.length()==0) {
+			file = JOptionPane.showInputDialog("El nombre no puede estar vacio");
 		}
+		this.filename = file;
 		DataInputStream dis = new DataInputStream(socket.getInputStream());
 		FileOutputStream fos = new FileOutputStream(filename + this.file_extension);
 		int count;
@@ -79,12 +78,13 @@ public class Receptor extends Thread {
 	}
 	private void descargaArchivoBatch(Socket socket) throws Exception {
 			
-			System.out.println("Introduce como quieres guardar el archivo(sin la extension de archivo):");
+			/*System.out.println("Introduce como quieres guardar el archivo(sin la extension de archivo):");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			String filename = br.readLine();
-			
+			br.close();
+			*/
 			DataInputStream dis = new DataInputStream(socket.getInputStream());
-			FileOutputStream fos = new FileOutputStream(filename + this.file_extension);
+			FileOutputStream fos = new FileOutputStream(filename+"(1)" + this.file_extension);
 			System.out.println("RECIBIENDO");
 			int count;
 		    byte[] bytes = new byte[16 * 1024];
@@ -103,6 +103,7 @@ public class Receptor extends Thread {
 			System.out.println("Archivo solicitado se ha descargado");
 			fos.close();
 	        dis.close();
+	        
 		
 	}
 

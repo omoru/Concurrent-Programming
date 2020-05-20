@@ -13,5 +13,6 @@ public interface OSobserver {
 	public void onFileDownloaded(String filename,long size);
 	public void onDownloading(String filename,long kbytes_downloaded);
 	public void onClientConnected(String name);
+	public void onFileAdded();
 
 }

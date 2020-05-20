@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import msg_src.Mensaje;
 import msg_src.MsgAñadirArchivo;
@@ -60,9 +59,7 @@ public class OyenteClient extends Thread {
 					}
 					case "MENSAJE_LISTA_USARIOS":{
 						System.out.println("Cliente "+ ((MsgListaUsuarios) m).getIdUsuario()+" ha solicitado info usuarios");
-						ArrayList<Usuario> array = (server.getUsersInfo());
-						System.out.println(array);
-						f_out.writeObject(new MsgConfirmListaUsuarios(m.getIPDestino(), m.getIPOrigen(),array));
+						f_out.writeObject(new MsgConfirmListaUsuarios(m.getIPDestino(), m.getIPOrigen(),server.getUsersInfo()));
 						break;
 					}
 					case "MENSAJE_AÑADIR_ARCHIVO":{
@@ -85,10 +82,10 @@ public class OyenteClient extends Thread {
 				}
 								
 			} catch (Exception e) {
-				System.out.println("Algo falla en un OyenteClient,cerrando su conexion");
+				System.out.println("Algo falla en un OyenteClient,cerrando su conexion y borrando datos");
 				server.deleteInfoUsuario(m.getIdUsuario());
 				server.deleteFlujosUsuario(m.getIdUsuario());
-				e.printStackTrace();
+				//e.printStackTrace();
 				return;
 			}
 		}
@@ -143,7 +140,7 @@ public class OyenteClient extends Thread {
 			}
 			
 		}
-		System.out.println("aaaaaaaaaaaaaaaaaaaaa"+ruta_archivo);
+		
 		ObjectOutputStream f_out2 = server.getOutputStreamOC(id_user);
 		f_out2.writeObject(new MsgEmitirFichero(msg.getIPDestino(),msg.getIPOrigen(),ruta_archivo,msg.getFilename(),msg.getIdUsuario()));
 		

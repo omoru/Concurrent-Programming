@@ -128,6 +128,7 @@ public class OyenteServer extends Thread{
 							break;
 						}
 						case "MENSAJE_CONFIRMACION_AÑADIR_ARCHIVO":{
+							for(int i=0; i <observers.size();i++)observers.get(i).onFileAdded();
 							break;
 						}
 						case "MENSAJE_EMITIR_FICHERO":{
@@ -187,10 +188,10 @@ public class OyenteServer extends Thread{
 	
 	
 	private void printInfoUsuarios(ArrayList<Usuario> usuarios) {
-		System.out.println("TABLA INFORMACION USUARIOS");
+		System.out.println("\nTABLA INFORMACION USUARIOS");
 		for(Usuario u: usuarios) {
 			System.out.println("ID: " + u.getIdUsuario());
-			System.out.println("Ficheros:\n");
+			System.out.println("Ficheros:");
 			for(File file: u.getFiles()) {
 				System.out.println(file.getFilename());
 			}

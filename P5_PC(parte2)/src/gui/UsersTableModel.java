@@ -18,10 +18,11 @@ public class UsersTableModel extends AbstractTableModel implements OSobserver{
 	private static final long serialVersionUID = 1L;
 	String[] columNames= {"ARCHIVO","USUARIO"};
 	private ArrayList<TableFiles> table_info_users;
-	
+	private Client ctrlClient;
 	
 	public  UsersTableModel(Client ctrlClient) {
 		this.table_info_users= new ArrayList<TableFiles>();
+		this.ctrlClient=ctrlClient;
 		ctrlClient.addObserver(this);
 	}
 	@Override
@@ -77,11 +78,14 @@ public class UsersTableModel extends AbstractTableModel implements OSobserver{
 		ArrayList<TableFiles> new_table = new ArrayList<TableFiles>();
 		
 		for(Usuario u: usuarios) {
-			if(u.getFiles().size()==0)
-				new_table.add(new TableFiles(null,u.getIdUsuario()));
-			for(File file: u.getFiles()) {
-				new_table.add(new TableFiles(file.getFilename(),u.getIdUsuario()));
+			if(!u.getIdUsuario().equals(ctrlClient.get_idUsuario())) {
+				if(u.getFiles().size()==0)
+					new_table.add(new TableFiles(null,u.getIdUsuario()));
+				for(File file: u.getFiles()) {
+					new_table.add(new TableFiles(file.getFilename(),u.getIdUsuario()));
+				}
 			}
+			
 		}
 		
 		return new_table;
@@ -112,6 +116,11 @@ public class UsersTableModel extends AbstractTableModel implements OSobserver{
 	}
 	@Override
 	public void onClientConnected(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onFileAdded() {
 		// TODO Auto-generated method stub
 		
 	}

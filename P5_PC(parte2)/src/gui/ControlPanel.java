@@ -63,8 +63,6 @@ public class ControlPanel extends JPanel implements OSobserver{
 					if(returnVal == JFileChooser.APPROVE_OPTION) {
 						filename =  chooser.getSelectedFile().getName();
 						ruta_filename = chooser.getSelectedFile().getAbsolutePath();
-						System.out.println("You chose to open this file: " +
-					       filename);
 						ctrlClient.sendMensaje(new MsgAñadirArchivo(ctrlClient.getIP(),ctrlClient.getIP_HOST(), filename, ruta_filename, ctrlClient.get_idUsuario()));
 
 					}
@@ -132,6 +130,13 @@ public class ControlPanel extends JPanel implements OSobserver{
 	@Override
 	public void onClientConnected(String name) {
 		JOptionPane.showMessageDialog(this.getParent(), "Wellcome " + name);
+		
+	}
+
+	@Override
+	public void onFileAdded() {
+		String msg = "Se ha añadido el archivo, ahora está visible para los demás usuarios.";
+		JOptionPane.showMessageDialog(this.getParent(),msg);
 		
 	}
 

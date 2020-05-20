@@ -51,6 +51,7 @@ public class UsersTable extends JPanel {
 	                  
 	        }
 	    });  
+	
 		
 	}
 	

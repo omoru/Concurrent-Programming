@@ -5,6 +5,8 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.WindowConstants;
+
 import client_src.Client;
 
 
@@ -44,6 +46,7 @@ public class ClientMainWindow extends JFrame {
 		this.setContentPane(panelPrincipal);
 		this.pack();
 		this.setVisible(true);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 	
 	private JPanel creaPanelPrincipal() {
