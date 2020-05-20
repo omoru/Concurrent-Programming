@@ -5,11 +5,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import msg_src.Mensaje;
+import msg_src.MsgAñadirArchivo;
 import msg_src.MsgCerrarConexion;
 import msg_src.MsgConexion;
 import msg_src.MsgConfirmListaUsuarios;
+import msg_src.MsgConfirmacionAddFile;
 import msg_src.MsgConfirmacionCerrarConexion;
 import msg_src.MsgConfirmacionConexion;
 import msg_src.MsgEmitirFichero;
@@ -57,7 +60,13 @@ public class OyenteClient extends Thread {
 					}
 					case "MENSAJE_LISTA_USARIOS":{
 						System.out.println("Cliente "+ ((MsgListaUsuarios) m).getIdUsuario()+" ha solicitado info usuarios");
-						f_out.writeObject(new MsgConfirmListaUsuarios(m.getIPDestino(), m.getIPOrigen(),server.getUsersInfo()));
+						ArrayList<Usuario> array = (server.getUsersInfo());
+						System.out.println(array);
+						f_out.writeObject(new MsgConfirmListaUsuarios(m.getIPDestino(), m.getIPOrigen(),array));
+						break;
+					}
+					case "MENSAJE_AÑADIR_ARCHIVO":{
+						añadirArchivo((MsgAñadirArchivo)m);
 						break;
 					}
 					case "MENSAJE_CERRAR_CONEXION":{
@@ -88,6 +97,11 @@ public class OyenteClient extends Thread {
 		
 	}
 	
+	private void añadirArchivo(MsgAñadirArchivo msg) throws IOException {
+		if(server.addFile(msg.getFilename(),msg.getRuta_filename(), msg.getIDusuario()))
+			f_out.writeObject(new MsgConfirmacionAddFile(server.getIpServer(),msg.getIPOrigen(), msg.getFilename()));
+		
+	}
 	private void realizarConexion(MsgConexion msg) throws IOException {
 		//info usuario
 		if(server.userAlreadyExists(msg.getIdUsuario())) {
@@ -115,9 +129,24 @@ public class OyenteClient extends Thread {
 	}
 	
 	private void avisarPeerEmisor(MsgPedirFichero msg) throws IOException {
+		String ruta_archivo=new String();
 		String id_user = server.getOwnerFile(msg.getFilename());
+		
+		for(Usuario u: server.getUsersInfo()) {
+			if(u.getIdUsuario().equalsIgnoreCase(id_user)) {
+				for(int i=0; i < u.getFicheros().size();i++) {
+					if(u.getFicheros().get(i).equalsIgnoreCase(msg.getFilename())) {
+						ruta_archivo= u.getRutasFicheros().get(i);
+						break;
+					}
+				}
+				break;
+			}
+			
+		}
+		System.out.println("aaaaaaaaaaaaaaaaaaaaa"+ruta_archivo);
 		ObjectOutputStream f_out2 = server.getOutputStreamOC(id_user);
-		f_out2.writeObject(new MsgEmitirFichero(msg.getFilename(),msg.getIdUsuario()));
+		f_out2.writeObject(new MsgEmitirFichero(ruta_archivo,msg.getIdUsuario()));
 		
 	}
 	

@@ -63,6 +63,10 @@ public class Server extends Thread {
 		return monitor.getUsersInfo();
 	}
 	
+	public  boolean addFile(String filename,String ruta_filename,String id_usuario) {
+		return monitor.addFile(filename,ruta_filename,id_usuario);
+	}
+	
 	
 	
 	public ArrayList<FlujosUsuario> getFlujosUsuarios(){
@@ -85,6 +89,9 @@ public class Server extends Thread {
 	public ObjectOutputStream getOutputStreamOC(String id_usuario) {
 		return monitor.getOutputStreamOC(id_usuario);
 	}
+
+
+
 	
 
 

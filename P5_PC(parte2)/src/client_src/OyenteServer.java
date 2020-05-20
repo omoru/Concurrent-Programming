@@ -11,6 +11,7 @@ import client_src.Client;
 import msg_src.Mensaje;
 import msg_src.MsgConexion;
 import msg_src.MsgConfirmListaUsuarios;
+import msg_src.MsgConfirmacionAddFile;
 import msg_src.MsgConfirmacionCerrarConexion;
 import msg_src.MsgEmitirFichero;
 import msg_src.MsgErrorConexion;
@@ -24,11 +25,13 @@ public class OyenteServer extends Thread{
 	private Socket socket;
 	private ObjectInputStream f_in; // flujo entrada a cliente
 	private Client client;
+	private ArrayList<OSobserver> observers;
 	public OyenteServer(Socket s,Client client) {
 		try {
 			this.client=client;
 			this.socket = s;
 			this.f_in = new ObjectInputStream(socket.getInputStream());
+			this.observers= new ArrayList<OSobserver>();
 		} catch (IOException e) {
 			System.out.println("PROBLEMA EN LA CREACION DE OYENTESERVER");
 			e.printStackTrace();
@@ -38,6 +41,14 @@ public class OyenteServer extends Thread{
 	
 	public void run() {
 		
+		if(client.getMode().equalsIgnoreCase("GUI")) {
+			runGUI();
+		}
+		else runBatch();
+		
+	}
+	
+	private void runBatch() {
 		while(true) {
 			Mensaje m;		
 				try {
@@ -54,7 +65,12 @@ public class OyenteServer extends Thread{
 						}
 						case "MENSAJE_CONFIRMACION_LISTA_USARIOS":{
 							System.out.println("Se ha recibido la información de los usuarios");
-							printInfoUsuarios(((MsgConfirmListaUsuarios) m).getInfo_usuarios());
+							ArrayList<Usuario> tabla = ((MsgConfirmListaUsuarios) m).getInfo_usuarios();
+							printInfoUsuarios(tabla);
+							break;
+						}
+						case "MENSAJE_CONFIRMACION_AÑADIR_ARCHIVO":{
+							//client.addFile(((MsgConfirmacionAddFile) m).getFilename());
 							break;
 						}
 						case "MENSAJE_EMITIR_FICHERO":{
@@ -94,6 +110,70 @@ public class OyenteServer extends Thread{
 		
 	}
 	
+	private void runGUI() {
+		while(true) {
+			Mensaje m;		
+				try {
+					 m = (Mensaje)f_in.readObject();
+					switch(m.getMensaje()) {
+						case "MENSAJE_CONFIRMACION_CONEXION":{
+							System.out.println("Conexion realizada con server");
+							client.getSemaphore().release();
+							for(int i=0; i <observers.size();i++)observers.get(i).onClientConnected(this.client.get_idUsuario());
+							break;
+						}
+						case "MENSAJE_ERROR_CONEXION":{
+							//reintentarConexion((MsgErrorConexion) m);
+							for(int i=0; i <observers.size();i++)observers.get(i).onChangeUsername((MsgErrorConexion) m);
+							break;
+						}
+						case "MENSAJE_CONFIRMACION_LISTA_USARIOS":{
+							//System.out.println("Se ha recibido la información de los usuarios");
+							ArrayList<Usuario> tabla = ((MsgConfirmListaUsuarios) m).getInfo_usuarios();
+							printInfoUsuarios(tabla);
+							for(int i=0; i <observers.size();i++)observers.get(i).onListaUsuariosRecibida(((MsgConfirmListaUsuarios) m).getInfo_usuarios());
+							break;
+						}
+						case "MENSAJE_CONFIRMACION_AÑADIR_ARCHIVO":{
+							//client.addFile(((MsgConfirmacionAddFile) m).getFilename());
+							break;
+						}
+						case "MENSAJE_EMITIR_FICHERO":{
+							enviarArchivo((MsgEmitirFichero) m);
+							break;
+						}
+						case "MENSAJE_PREPARADO_SERVIDORCLIENTE":{
+							recibirArchivo((MsgPreparadoSC) m);
+							break;
+						}
+						case "MENSAJE_CONFIRMACION_CERRAR_CONEXION":{
+							System.out.println("Adios "+ ((MsgConfirmacionCerrarConexion) m).getIdUsuario());
+							socket.close();
+							f_in.close();
+							return;
+							
+						}
+						default:
+	                        System.out.println("Mensaje no identificado");break;
+					}
+				}
+				catch (Exception e) {
+					System.out.println("Se ha cortado la conexion del server");
+					try {
+						socket.close();
+						f_in.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					e.printStackTrace();
+					return;
+				}
+				
+		
+		}
+		
+	}
 	
 	private void reintentarConexion(MsgErrorConexion msg) {
 		client.changeUserName();
@@ -112,7 +192,7 @@ public class OyenteServer extends Thread{
 	private void recibirArchivo(MsgPreparadoSC msg) {
 		String ip_dest= msg.getMyIP();
 		int  puerto_dest=msg.getPuertoPropio();
-		new Receptor(ip_dest,puerto_dest,client.get_idUsuario(),msg.getFilename()).start();//peerReceptor
+		new Receptor(this.observers,ip_dest,puerto_dest,client.get_idUsuario(),msg.getFilename()).start();//peerReceptor
 	}
 	
 	
@@ -123,6 +203,9 @@ public class OyenteServer extends Thread{
 			System.out.println("Ficheros: " + u.getFicheros() +'\n');
 		}
 		
+	}
+	public void addObserver(OSobserver o) {
+		this.observers.add(o);
 	}
 
 

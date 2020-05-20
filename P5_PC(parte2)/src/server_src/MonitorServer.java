@@ -6,20 +6,24 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
+import msg_src.MsgConfirmacionAddFile;
 import users_src.FlujosUsuario;
 import users_src.Usuario;
 
 public class MonitorServer {
 	//Contiene id, ip y ficheros de los usuarios
-	private ArrayList<Usuario> tabla_informacion_usuarios = new ArrayList<Usuario>();
+	private ArrayList<Usuario> tabla_informacion_usuarios;
 	//Contiene id, flujo de entrada y flujo de salida de los usuarios
-	private ArrayList<FlujosUsuario> tabla_flujos_usuarios = new ArrayList<FlujosUsuario>();
+	private ArrayList<FlujosUsuario> tabla_flujos_usuarios;
 	final Lock lockTablaFlujos = new ReentrantLock();
 	final Lock lockTablaInfo = new ReentrantLock();
 	
 	
 	public MonitorServer() {
+		this.tabla_informacion_usuarios= new ArrayList<Usuario>();
+		this.tabla_flujos_usuarios= new ArrayList<FlujosUsuario>();
 		
 	}
 	
@@ -66,6 +70,15 @@ public class MonitorServer {
 		lockTablaInfo.unlock();
 	}
 	
+	 public boolean addFile(String filename,String ruta_filename,String id_usuario) {
+		 for(int i=0; i < tabla_informacion_usuarios.size();i++){
+				if(tabla_informacion_usuarios.get(i).getIdUsuario().equals(id_usuario)) {
+					this.tabla_informacion_usuarios.get(i).addFile(new String(filename), new String(ruta_filename));
+					return true;
+				}
+			}
+		 return false;
+	 }
 	
 	
 	 public  void añadirFlujosUsuario(FlujosUsuario fu) {
@@ -75,7 +88,11 @@ public class MonitorServer {
 	}
 	
 	 public ArrayList<Usuario> getUsersInfo(){
-		return new ArrayList<Usuario>(tabla_informacion_usuarios);
+		 ArrayList<Usuario> table_info = new ArrayList<Usuario>();
+	        for(Usuario user : tabla_informacion_usuarios) {
+	        	table_info.add(new Usuario(user));
+	        }
+	        return table_info;
 	}
 	
 	 public void deleteInfoUsuario(String id_usuario) {
