@@ -1,5 +1,6 @@
-package client_src;
+package launcher;
 
+import client_src.Client;
 
 public class MainClient {
 
@@ -19,10 +20,16 @@ public class MainClient {
 		String ip_client = args[2];//ip cliente
 		if(mode.equalsIgnoreCase("GUI") ||mode.equalsIgnoreCase("BATCH")) {
 			Client client = new Client(PUERTO,ip_client,ip_host,mode);
-			client.start();		
+			client.start();	
+			try {
+				client.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else {
-			System.out.println("Introduce un modo valido por argumentos");
+			System.out.println("Introduce un modo valido por argumentos(GUI o BATCH)");
 			return;
 		}
 		

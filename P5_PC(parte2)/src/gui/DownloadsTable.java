@@ -20,7 +20,7 @@ public class DownloadsTable extends JPanel {
 	JTable table;
 	public DownloadsTable(Client ctrlClient) {
 		setLayout(new BorderLayout());
-		setBorder(BorderFactory.createTitledBorder(	BorderFactory.createLineBorder(Color.black, 2), "Info",TitledBorder.LEFT
+		setBorder(BorderFactory.createTitledBorder(	BorderFactory.createLineBorder(Color.black, 2), "Downloads",TitledBorder.LEFT
 		,TitledBorder.TOP)); 
 		
 		DownloadsTableModel download_table = new DownloadsTableModel(ctrlClient);

@@ -1,5 +1,7 @@
-package server_src;
+package launcher;
 
+import server_src.MonitorServer;
+import server_src.Server;
 
 public class MainServer {
 
@@ -15,6 +17,14 @@ public class MainServer {
 			int PUERTO = Integer.parseInt(args[1]);
 			MonitorServer monitor = new MonitorServer();
 			//Iniciamos el server
-			new Server(PUERTO,ip_server,monitor).start();
+			Server server = new Server(PUERTO,ip_server,monitor);
+			server.start();
+			try {
+				server.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 	}
 }

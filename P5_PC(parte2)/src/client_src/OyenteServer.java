@@ -31,7 +31,7 @@ public class OyenteServer extends Thread{
 			this.f_in = new ObjectInputStream(socket.getInputStream());
 			this.observers= new ArrayList<OSobserver>();
 		} catch (IOException e) {
-			System.out.println("PROBLEMA EN LA CREACION DE OYENTESERVER");
+			System.out.println("Problema en la construccion de un objeto OyenteServer");
 			e.printStackTrace();
 		}
 		
@@ -76,6 +76,7 @@ public class OyenteServer extends Thread{
 							break;
 						}
 						case "MENSAJE_PREPARADO_SERVIDORCLIENTE":{
+							
 							recibirArchivo((MsgPreparadoSC) m);
 							break;
 						}
@@ -91,7 +92,7 @@ public class OyenteServer extends Thread{
 					}
 				}
 				catch (Exception e) {
-					System.out.println("Se ha cortado la conexion del server");
+					System.out.println("Se ha cortado la conexion del server, cerrando OyenteServidor");
 					try {
 						socket.close();
 						f_in.close();
@@ -151,7 +152,7 @@ public class OyenteServer extends Thread{
 					}
 				}
 				catch (Exception e) {
-					System.out.println("Se ha cortado la conexion del server");
+					System.out.println("Se ha cortado la conexion del server, cerrando OyenteServidor");
 					try {
 						socket.close();
 						f_in.close();
@@ -177,7 +178,7 @@ public class OyenteServer extends Thread{
 		sk.setReuseAddress(true);
 		Mensaje mm = new MsgPreparadoCS(msg.getIdUsuario(),msg.getIPOrigen(),client.getIP(),sk.getLocalPort(),msg.getFilename());
 		client.sendMensaje(mm);
-		new Emisor(sk,sk.accept(),msg.getRutaFilename()).start();//peerEmisor
+		new Emisor(sk,msg.getRutaFilename()).start();//peerEmisor
 	}
 	
 	private void recibirArchivo(MsgPreparadoSC msg) {

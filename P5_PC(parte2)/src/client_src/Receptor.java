@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
+
 import javax.swing.JOptionPane;
 
 
@@ -17,18 +19,18 @@ public class Receptor extends Thread {
 	private String ip;
 	private int puerto;
 	private ArrayList<OSobserver> observers;
-	private String file_extension;
-	private String filename;
+	private String file_extension;// extension del archivo(.txt, .mp4 etc)
+	private String filename;//nombre del archivo sin la extension
 	
-	public Receptor(ArrayList<OSobserver>  observers,String ip, int puerto,String mode, String filename) {
+	public Receptor(ArrayList<OSobserver>  observers,String ip, int puerto,String mode, String file_name) {
 		this.puerto=puerto;
 		this.ip = ip;
 		this.observers=observers;
 		this.mode=mode;
-		this.filename=filename;
 		String [] parts = new String[2];
-		parts = this.filename.split("\\.");
+		parts =file_name.split("\\.");
 		String extension = parts[1];
+		this.filename=parts[0];
 		this.file_extension= "."+ extension;
 	}
 	
@@ -61,7 +63,7 @@ public class Receptor extends Thread {
 		DataInputStream dis = new DataInputStream(socket.getInputStream());
 		FileOutputStream fos = new FileOutputStream(filename + this.file_extension);
 		int count;
-	    byte[] bytes = new byte[16 * 1024];
+	    byte[] bytes = new byte[8 * 1024];
 	    long  totalbytes=0;
 	    while((count = dis.read(bytes)) > 0) {
 	    	fos.write(bytes, 0, count);
@@ -83,19 +85,20 @@ public class Receptor extends Thread {
 			String filename = br.readLine();
 			br.close();
 			*/
+			int complement =new Random().nextInt(1000); // generamos un numero aleatorio para que no sobreescriba al archivo original
 			DataInputStream dis = new DataInputStream(socket.getInputStream());
-			FileOutputStream fos = new FileOutputStream(filename+"(1)" + this.file_extension);
+			FileOutputStream fos = new FileOutputStream(filename+ complement+ this.file_extension);
 			System.out.println("RECIBIENDO");
 			int count;
-		    byte[] bytes = new byte[16 * 1024];
+		    byte[] bytes = new byte[8 * 1024];
 		    long  totalbytes=0;
 		    long temp=0;
 		    while((count = dis.read(bytes)) > 0) {
 		    	fos.write(bytes, 0, count);
 		    	totalbytes+=count;
 		    	if(temp < totalbytes) {
-		    		System.out.println("Se han descargado "+ totalbytes/1000+" bytes");
-		    		temp = totalbytes * 2;
+		    		System.out.println("Se han descargado "+ totalbytes/1000+" Kbytes");
+		    		temp = totalbytes * 4;
 		    	}
 		    		    	
 			}

@@ -47,7 +47,7 @@ public class ControlPanel extends JPanel implements OSobserver{
 				}
 				else if(botonPulsado==close) {
 					int dialog=JOptionPane.YES_NO_OPTION;
-					int dialogResult= JOptionPane.showConfirmDialog(close.getParent(),"¿Está seguro de que desea salir del programa?","EXIT",dialog);
+					int dialogResult= JOptionPane.showConfirmDialog(getParent(),"¿Está seguro de que desea salir del programa?","EXIT",dialog);
 					if(dialogResult==JOptionPane.YES_OPTION) {
 						ctrlClient.sendMensaje(new MsgCerrarConexion(ctrlClient.getIP(), ctrlClient.getIP_HOST(), ctrlClient.get_idUsuario()));
 						System.exit(0);
@@ -102,7 +102,7 @@ public class ControlPanel extends JPanel implements OSobserver{
 	
 		String name = JOptionPane.showInputDialog(this.getParent(),"Su id esta ya elegido, escoja otro");
 		while(name.equalsIgnoreCase("")) {
-			name = JOptionPane.showInputDialog("El id no puede ser vacio");
+			name = JOptionPane.showInputDialog(this.getParent(),"El id no puede ser vacio");
 		}
 		ctrlClient.setIdUsuario(name);
 		ctrlClient.sendMensaje(new MsgConexion(ctrlClient.getIP(),msg.getIPOrigen(), name));

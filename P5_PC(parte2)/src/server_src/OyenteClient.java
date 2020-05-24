@@ -37,7 +37,7 @@ public class OyenteClient extends Thread {
 			this.f_in = new  ObjectInputStream(socket.getInputStream());
 			this.server= server;
 		} catch (IOException e) {
-			System.out.println("PROBLEMA EN LA CREACION DE OYENTE CLIENTE");
+			System.out.println("Problema al construir objeto de la clase OyenteClient");
 			e.printStackTrace();
 		}
 		
@@ -82,10 +82,10 @@ public class OyenteClient extends Thread {
 				}
 								
 			} catch (Exception e) {
-				System.out.println("Algo falla en un OyenteClient,cerrando su conexion y borrando datos");
+				System.out.println("Problema en el run de OyenteClient,cerrando su conexion y borrando datos");
 				server.deleteInfoUsuario(m.getIdUsuario());
 				server.deleteFlujosUsuario(m.getIdUsuario());
-				//e.printStackTrace();
+				e.printStackTrace();
 				return;
 			}
 		}
@@ -93,6 +93,7 @@ public class OyenteClient extends Thread {
 		
 		
 	}
+	
 	
 	private void añadirArchivo(MsgAñadirArchivo msg) throws IOException {
 		if(server.addFile(msg.getFilename(),msg.getRuta_filename(), msg.getIdUsuario()))
@@ -127,7 +128,13 @@ public class OyenteClient extends Thread {
 	private void avisarPeerEmisor(MsgPedirFichero msg) throws IOException {
 		String ruta_archivo=new String();
 		String id_user = server.getOwnerFile(msg.getFilename());
+		if(id_user==null) {
+			System.out.println(msg.getFilename());
+			System.out.println("Problema en OyenteCliente,archivo no encontrado");
+			return;
+		}
 		
+		//seleccionames la ruta correspondiente al archivo que tiene que enviar
 		for(Usuario u: server.getUsersInfo()) {
 			if(u.getIdUsuario().equalsIgnoreCase(id_user)) {
 				for(File f : u.getFiles()) {
@@ -141,6 +148,7 @@ public class OyenteClient extends Thread {
 			
 		}
 		
+		//enviamos el mensaje de emitir fichero al emisor pasandole la ruta y el nombre de archivo
 		ObjectOutputStream f_out2 = server.getOutputStreamOC(id_user);
 		f_out2.writeObject(new MsgEmitirFichero(msg.getIPDestino(),msg.getIPOrigen(),ruta_archivo,msg.getFilename(),msg.getIdUsuario()));
 		
