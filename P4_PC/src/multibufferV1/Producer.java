@@ -1,6 +1,5 @@
 package multibufferV1;
 
-import java.util.Random;
 
 public class Producer extends Thread {
 	private MonitorMB m;

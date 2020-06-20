@@ -4,6 +4,7 @@ package producerConsumer;
 public class Consumer extends Thread {
 
 	private MonitorPC m;
+	@SuppressWarnings("unused")
 	private int id;
 	
 	public Consumer(MonitorPC m, int id) {
@@ -13,11 +14,11 @@ public class Consumer extends Thread {
 	
 	public void run() {
 		while(true) {
+			@SuppressWarnings("unused")
 			Producto extraido = this.m.extraer();
 			try {
 				sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

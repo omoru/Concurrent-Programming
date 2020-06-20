@@ -33,7 +33,7 @@ public class MonitorMB implements Almacen_multiBuffer{
 		for (int i = 0; i < productos.length; i++){
 			buffer[fin] = productos[i];
 			n_elems+=1;
-			fin = (ini+1) % TAM_BUFFER;
+			fin = (fin+1) % TAM_BUFFER;
 			}
 
 		System.out.println("Productor " + productos[0].string_id_productor()

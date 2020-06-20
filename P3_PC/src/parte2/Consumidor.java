@@ -3,6 +3,7 @@ package parte2;
 public class Consumidor extends Thread{
 
 	private Shared v_compartida;
+	@SuppressWarnings("unused")
 	private int id;
 	
 	public Consumidor(Shared v,int id) {

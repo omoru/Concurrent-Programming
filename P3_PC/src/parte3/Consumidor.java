@@ -4,6 +4,7 @@ package parte3;
 
 public class Consumidor extends Thread {
 	private Shared v_compartida;
+	@SuppressWarnings("unused")
 	private int id;
 	
 	public Consumidor(Shared v,int id) {
@@ -20,7 +21,6 @@ public class Consumidor extends Thread {
 		try {
 			sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

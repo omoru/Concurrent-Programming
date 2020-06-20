@@ -4,6 +4,7 @@ import multibufferV1.Producto;
 
 public class Consumer extends Thread{
 		private MonitorMB_v2 m;
+		@SuppressWarnings("unused")
 		private int id;
 		private int tam;
 		
@@ -17,6 +18,7 @@ public class Consumer extends Thread{
 			while(true) {
 				int numero = (int) (Math.random() * (this.tam/2)) + 1;
 					try {
+						@SuppressWarnings("unused")
 						Producto[] extraido =this.m.extraer(numero);
 						//usar extraido
 					} catch (InterruptedException e1) {

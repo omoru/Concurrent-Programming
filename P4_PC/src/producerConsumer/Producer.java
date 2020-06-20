@@ -5,6 +5,7 @@ public class Producer extends Thread {
 	
 
 	private MonitorPC m;
+	@SuppressWarnings("unused")
 	private int id;
 	
 	public Producer(MonitorPC m, int id) {

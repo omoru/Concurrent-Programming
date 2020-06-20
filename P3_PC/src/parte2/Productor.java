@@ -3,6 +3,7 @@ package parte2;
 public class Productor extends Thread{
 	
 	private Shared v_compartida;
+	@SuppressWarnings("unused")
 	private int id;
 	
 	public Productor(Shared v,int id) {
@@ -19,7 +20,7 @@ public class Productor extends Thread{
 			try {
 				sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 

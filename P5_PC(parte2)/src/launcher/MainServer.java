@@ -1,6 +1,7 @@
 package launcher;
 
-import server_src.MonitorServer;
+import server_src.MonitorTablaFlujos;
+import server_src.MonitorTablaInfo;
 import server_src.Server;
 
 public class MainServer {
@@ -15,9 +16,10 @@ public class MainServer {
 			}
 			String ip_server =args[0];
 			int PUERTO = Integer.parseInt(args[1]);
-			MonitorServer monitor = new MonitorServer();
+			MonitorTablaFlujos monitor_tf = new MonitorTablaFlujos();
+			MonitorTablaInfo monitor_ti = new MonitorTablaInfo();
 			//Iniciamos el server
-			Server server = new Server(PUERTO,ip_server,monitor);
+			Server server = new Server(PUERTO,ip_server,monitor_tf,monitor_ti);
 			server.start();
 			try {
 				server.join();
