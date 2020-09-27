@@ -1,12 +1,13 @@
+// OSCAR MORUJO FERNANDEZ
 package multibufferV2;
 
 
 public class Main {
 public static void main(String args[]) {
 		
-		final int NC = 3;
-		final int NP = 3;
-		final int tam_buffer = 10;
+		final int NC = 10;
+		final int NP = 10;
+		final int tam_buffer = 15;
 		
 		Producer[] productores = new Producer[NP];
 		Consumer[] consumidores = new Consumer[NC];

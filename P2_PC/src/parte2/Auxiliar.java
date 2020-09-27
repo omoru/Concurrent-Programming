@@ -1,14 +1,11 @@
 // OSCAR MORUJO FERNANDEZ
-package EJ1;
+package parte2;
 
 public class Auxiliar {
 
-	private volatile int a;
-	public int N;
-	
-	
-	public Auxiliar(int  n) {
-		N=n;
+	volatile private int a;
+
+	public Auxiliar() {
 		a = 0;
 	}
 	
@@ -25,3 +22,4 @@ public class Auxiliar {
 	}
 
 }
+

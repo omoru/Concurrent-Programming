@@ -1,8 +1,9 @@
+// OSCAR MORUJO FERNANDEZ
 package incrementAndDecrement;
 
 public class Main {
 	
-	private static int N = 1001;
+	private static int N = 1201;
 	
 	public static void main(String args[]) {
 		
@@ -17,7 +18,7 @@ public class Main {
 			sumas[i].start();
 			restas[i].start();
 		}
-		
+				
 	
 	}
 }

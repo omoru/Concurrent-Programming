@@ -1,3 +1,4 @@
+// OSCAR MORUJO FERNANDEZ
 package multibufferV1;
 
 public interface Almacen_multiBuffer {

@@ -1,4 +1,4 @@
-// ÓSCAR MORUJO FERNÁNDEZ
+// OSCAR MORUJO FERNANDEZ
 package parte1;
 import java.util.concurrent.*; 
 
@@ -16,14 +16,14 @@ public class Shared {
 	
 	public void increment() {
 		P();
-		System.out.println("Sumando");
+		//System.out.println("Sumando");
 		this.value= this.value + 1;
 		V();
 	}
 	
 	public void decrement() {
 		P();
-		System.out.println("Restando");
+		//System.out.println("Restando");
 		this.value= this.value - 1;
 		V();
 	}
@@ -32,7 +32,6 @@ public class Shared {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

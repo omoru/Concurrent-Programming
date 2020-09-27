@@ -1,11 +1,11 @@
+
+// OSCAR MORUJO FERNANDEZ
 package producerConsumer;
-
-
 
 public class Main {
 	
-	private static int NC = 4;
-	private static int NP = 4;
+	private static int NC = 10;
+	private static int NP = 10;
 	private static int tam_buffer = 6;
 	public static void main(String args[]) {
 		

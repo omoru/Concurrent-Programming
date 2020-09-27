@@ -1,3 +1,4 @@
+// OSCAR MORUJO FERNANDEZ
 package multibufferV1;
 
 public class MonitorMB implements Almacen_multiBuffer{
@@ -5,7 +6,7 @@ public class MonitorMB implements Almacen_multiBuffer{
 	private Producto buffer[] = null;
 	private int TAM_BUFFER = 0; // TAM BUFFER
 	private int ini = 0; // primera posición  a consumir
-	private int fin = 0; //primera posición libre para consumir, además  ## fin = (ini + n_elems) % N
+	private int fin = 0; // ## fin = (ini + n_elems) % N
 	private int n_elems = 0;
 	
 	

@@ -1,3 +1,4 @@
+// OSCAR MORUJO FERNANDEZ
 package multibufferV2;
 
 import multibufferV1.Producto;

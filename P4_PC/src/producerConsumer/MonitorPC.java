@@ -1,13 +1,14 @@
+
+// OSCAR MORUJO FERNANDEZ
 package producerConsumer;
-
-
 
 public class MonitorPC implements Almacen {
 	
 	private  Producto buffer[] = null;
 	private  final int N; // TAM BUFFER
 	private  int ini = 0; // primera posición  a consumir
-	private  int fin = 0; //primera posición libre para consumir, además  ## fin = (ini + n_elems) % N
+	private  int fin = 0; //primera posición libre para producir
+	//## fin = (ini + n_elems) % N
 	private  int n_elems = 0;
 	
 	
@@ -35,7 +36,7 @@ public class MonitorPC implements Almacen {
 		System.out.println("Almacenando " + producto.tostring() +",hay " + n_elems+" elementos.");
 
 		this.fin = (this.fin + 1) % N;
-		notify();
+		notifyAll();
 		
 	}
 	@Override
@@ -53,7 +54,7 @@ public class MonitorPC implements Almacen {
 		this.n_elems-=1;
 		System.out.println("Consumiendo "+ p.tostring()+",quedan "+ n_elems+" elementos.");
 		this.ini = (this.ini + 1) % N;
-		notify();
+		notifyAll();
 		return p;
 	}
 

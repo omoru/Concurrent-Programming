@@ -1,5 +1,5 @@
 
-// ÓSCAR MORUJO FERNÁNDEZ
+// OSCAR MORUJO FERNANDEZ
 package parte2;
 
 public interface Almacen {

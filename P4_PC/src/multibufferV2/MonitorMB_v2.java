@@ -1,3 +1,4 @@
+// OSCAR MORUJO FERNANDEZ
 package multibufferV2;
 
 import java.util.concurrent.locks.Condition;
@@ -12,7 +13,7 @@ public class MonitorMB_v2 implements Almacen_multiBuffer{
 		private Producto buffer[] = null;
 		private int TAM_BUFFER = 0; // TAM BUFFER
 		private int ini = 0; // primera posición  a consumir
-		private int fin = 0; //primera posición libre para consumir, además  ## fin = (ini + n_elems) % N
+		private int fin = 0; //## fin = (ini + n_elems) % N
 		private int n_elems = 0;
 		final Lock lock = new ReentrantLock();
 		final Condition okConsume = lock.newCondition();
@@ -32,9 +33,9 @@ public class MonitorMB_v2 implements Almacen_multiBuffer{
 					okProduce.await();	
 			
 				for (int i = 0; i < productos.length; i++){
-					buffer[ini] = productos[i];
+					buffer[fin] = productos[i];
 					n_elems+=1;
-					ini = (ini+1) % TAM_BUFFER;
+					fin = (fin+1) % TAM_BUFFER;
 					}
 
 				System.out.println("Productor " + productos[0].string_id_productor()
@@ -62,8 +63,8 @@ public class MonitorMB_v2 implements Almacen_multiBuffer{
 			
 				for (int i = 0; i < n; i++) {
 					cadena[i] = buffer[fin];
-					buffer[fin] = null;
-					fin = (fin + 1) % TAM_BUFFER;
+					buffer[ini] = null;
+					ini = (ini + 1) % TAM_BUFFER;
 					n_elems-=1;
 					}
 				System.out.println("Se ha extraido una cadena de longitud "+ n);

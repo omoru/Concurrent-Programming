@@ -1,6 +1,7 @@
+
+// OSCAR MORUJO FERNANDEZ
 package parte1;
 
-// ÓSCAR MORUJO FERNÁNDEZ
 public class Test {
 	
 		private static int N = 1000;
@@ -23,13 +24,11 @@ public class Test {
 				try {
 					sumas[i].join();
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				try {
 					restas[i].join();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
